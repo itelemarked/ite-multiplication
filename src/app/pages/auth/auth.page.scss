@@ -1,0 +1,21 @@
+
+ion-item {
+  ion-label {
+    color: rgb(58, 57, 57);
+  }
+}
+
+
+ion-item.ion-touched.ion-invalid {
+  --border-color: var(--ion-color-danger);
+  ion-label {
+    color: var(--ion-color-danger);
+  }
+}
+
+ion-item.item-has-focus {
+  --border-color: var(--ion-color-primary);
+  ion-label {
+    color: var(--ion-color-primary);
+  }
+}

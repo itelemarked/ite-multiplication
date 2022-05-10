@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ite-multiplication": {
+      "hosting": {
+        "ite-multiplication": [
+          "ite-multiplication"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ite-multiplication"
+  }
+}

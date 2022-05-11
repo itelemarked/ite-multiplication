@@ -9,18 +9,23 @@
 
   <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
     <form [formGroup]="form">
-      <ion-item>
+      <ion-item style="--padding-start: 0;">
         <ion-label position="floating">Username</ion-label>
         <ion-input type="text" formControlName="usernameCtl"></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item style="--padding-start: 0;" [ngClass]="{'app-hidden': loginState === 'logout'}">
         <ion-label position="floating">Password</ion-label>
         <ion-input type="password" formControlName="passwordCtl"></ion-input>
       </ion-item>
 
-      <div style="padding-top: 40px; padding-bottom: 40px;">
-        <ion-button fill="outline" expand="block">LOGIN</ion-button>
+      <div *ngIf="loginState === 'login'" style="margin-top: 40px; margin-bottom: 40px; height: 80px;">
+        <ion-button fill="outline" expand="block" [disabled]="!form.valid" (click)="login()">LOGIN</ion-button>
+        <p><small><i>Don't have an account yet? <a (click)="signup()">Signup</a></i></small></p>
+      </div>
+
+      <div *ngIf="loginState === 'logout'" style="margin-top: 40px; margin-bottom: 40px; height: 80px;">
+        <ion-button fill="outline" expand="block" color="danger" (click)="logout()">LOGOUT</ion-button>
       </div>
     </form>
   </div>

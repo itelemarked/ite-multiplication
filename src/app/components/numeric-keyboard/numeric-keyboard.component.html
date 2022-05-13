@@ -1,0 +1,26 @@
+<ion-grid style="aspect-ratio: 3/4; margin: auto;">
+  <ion-row>
+    <ion-col (click)="tip('1')">1</ion-col>
+    <ion-col (click)="tip('2')">2</ion-col>
+    <ion-col (click)="tip('3')">3</ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col (click)="tip('4')">4</ion-col>
+    <ion-col (click)="tip('5')">5</ion-col>
+    <ion-col (click)="tip('6')">6</ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col (click)="tip('7')">7</ion-col>
+    <ion-col (click)="tip('8')">8</ion-col>
+    <ion-col (click)="tip('9')">9</ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col (click)="tip('cancel')" class="color-danger">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-col>
+    <ion-col (click)="tip('0')">0</ion-col>
+    <ion-col  (click)="tip('ok')" class="color-primary" [ngClass]="{'opacity-invalid': this.valueStr === ''}">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-col>
+  </ion-row>
+</ion-grid>

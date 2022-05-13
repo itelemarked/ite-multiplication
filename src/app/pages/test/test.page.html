@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Test</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <p>3 x 8</p>
+  <input #inpCtl type="number"/>
+  <div>
+    <ion-button size="small">next</ion-button>
+    <ion-button size="small" (click)="inpCtl.value = ''; inpCtl.focus()">clear</ion-button>
+  </div> -->
+
+  <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+    <!-- <div style="width: 320px; height: 524px; background-color: red;"></div> -->
+    <div style="
+      max-width: 100%;
+      min-width: 320px;
+      min-height: 524px;
+      aspect-ratio: 320/524;
+      max-height: 100%; 
+      background-color: rgb(243, 243, 243);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      ">
+      
+      <div style="flex-grow: 1;">aaa</div>
+
+      <app-numeric-keyboard
+        (valueChange)="log('', $event)"
+        (validate)="log('Validated: ', $event)"
+        style="width: 75%;"
+      ></app-numeric-keyboard>
+      
+
+    </div>
+  </div>
+
+</ion-content>

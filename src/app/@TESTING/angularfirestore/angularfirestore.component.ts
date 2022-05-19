@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument, DocumentChangeType } from '@angular/fire/compat/firestore';
 import { take } from 'rxjs';
-import { Multiple } from '../../models/multiple.model';
+import { Multiple } from '../../models/multiple/multiple.model';
 
 @Component({
   selector: 'app-angularfirestore',

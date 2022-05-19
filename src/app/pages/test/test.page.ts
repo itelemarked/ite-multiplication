@@ -11,8 +11,4 @@ export class TestPage implements OnInit {
 
   ngOnInit(): void {}
 
-  log(msg: string, e: string) {
-    console.log(msg + e)
-  }
-
 }

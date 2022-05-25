@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AngularfirestoreComponent } from './angularfirestore/angularfirestore.component';
+import { TestsComponent } from './angularfirestore/tests.component/tests.component';
 
 
-const DEFAULT_ROUTE = 'angularfirestore';
+const DEFAULT_ROUTE = 'tests';
 
 const routes: Routes = [
   { path: '', redirectTo: DEFAULT_ROUTE, pathMatch: 'full' },
-  { path: 'angularfirestore', component: AngularfirestoreComponent }
+  { path: 'tests', component: TestsComponent }
 ];
 
 @NgModule({

@@ -7,8 +7,10 @@ import { StatisticsPage } from './pages/statistics/statistics.page';
 import { TestPage } from './pages/test/test.page';
 import { TrainingPage } from './pages/training/training.page';
 
+const DEFAULT_ROUTE = 'TESTING'
+
 const routes: Routes = [
-  { path: '', redirectTo: 'auth', pathMatch: 'full'},
+  { path: '', redirectTo: DEFAULT_ROUTE, pathMatch: 'full'},
   { path: 'auth', component: AuthPage },
   { path: 'home', component: HomePage },
   { path: 'test', component: TestPage },

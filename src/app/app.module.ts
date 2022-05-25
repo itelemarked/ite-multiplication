@@ -9,6 +9,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+
+// import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+// import { getAuth, provideAuth } from '@angular/fire/auth';
+// import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+
 import { environment } from '../environments/environment';
 
 import { AuthPage } from './pages/auth/auth.page';
@@ -17,6 +22,7 @@ import { TestPage } from './pages/test/test.page';
 import { TrainingPage } from './pages/training/training.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
 import { NumericKeyboardComponent } from './components/numeric-keyboard/numeric-keyboard.component';
+
 
 @NgModule({
   declarations: [

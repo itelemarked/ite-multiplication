@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      TESTS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-button (click)="addTest(2)">Add Test</ion-button>
+  
+  <ion-list>
+    <ion-item *ngFor="let test of tests">
+      <ion-label>{{test.id}}</ion-label>
+      <ion-button slot="end" color="danger" fill="clear" (click)="deleteTest(test)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

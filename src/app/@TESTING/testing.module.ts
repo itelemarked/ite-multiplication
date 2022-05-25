@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { IonicModule } from '@ionic/angular';
 import { TestingRoutingModule } from './testing-routing.module';
 
-import { AngularfirestoreComponent } from './angularfirestore/angularfirestore.component';
-import { IonicModule } from '@ionic/angular';
+import { TestsComponent } from './angularfirestore/tests.component/tests.component';
+
+
 
 
 @NgModule({
   declarations: [
-    AngularfirestoreComponent
+    TestsComponent
   ],
   imports: [
     CommonModule,

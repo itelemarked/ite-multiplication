@@ -6,8 +6,6 @@ import { TestingRoutingModule } from './testing-routing.module';
 import { TestsComponent } from './angularfirestore/tests.component/tests.component';
 
 
-
-
 @NgModule({
   declarations: [
     TestsComponent
@@ -15,7 +13,7 @@ import { TestsComponent } from './angularfirestore/tests.component/tests.compone
   imports: [
     CommonModule,
     IonicModule,
-    TestingRoutingModule
+    TestingRoutingModule,
   ]
 })
 export class TestingModule { }

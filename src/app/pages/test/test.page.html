@@ -3,33 +3,46 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Test</ion-title>
+    <ion-title>TEST</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
 
-  <!-- <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-    <div style="
-      max-width: 100%;
-      min-width: 320px;
-      min-height: 524px;
-      aspect-ratio: 320/524;
-      max-height: 100%; 
-      background-color: rgb(243, 243, 243);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      ">
-      
-      <div style="flex-grow: 1;">aaa</div>
-
-      <app-numeric-keyboard
-        (valueChange)="log('', $event)"
-        (validate)="log('Validated: ', $event)"
-        style="width: 75%;"
-      ></app-numeric-keyboard>
+  <div class="ion-padding-top">
+    <div style="display: flex; align-items: center;">
+      <span style="width: 50%;">Time interval:</span>
+      <span style="width: 20%;">{{ timeInterval }} sec</span>
+      <span style="width: 30%; text-align: right;">
+        <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;" (click)="changeTimeInterval('decrement')">-</ion-button>
+        <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;" (click)="changeTimeInterval('increment')">+</ion-button>
+      </span>
     </div>
-  </div> -->
+  </div>
+
+  <div class="ion-padding-top">
+    <div style="display: flex; align-items: center;">
+      <span style="width: 50%;">Successes needed:</span>
+      <span style="width: 20%;">{{ successesNeeded }}</span>
+      <span style="width: 30%; text-align: right;">
+        <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;" (click)="changeSuccessesNeeded('decrement')">-</ion-button>
+        <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;" (click)="changeSuccessesNeeded('increment')">+</ion-button>
+      </span>
+    </div>
+  </div>
+
+  <div class="ion-padding-top">
+    <ion-button expand="block" size="large">START</ion-button>
+  </div>
+
+  <div class="ion-padding-top" style="color: gray; font-size: 0.9em; font-style: italic;">
+    <p>
+      <span style="display: inline-block; width: 50%;">Events:</span>
+      <span>{{ events }}</span>
+      <br>
+      <span style="display: inline-block; width: 50%;">Estimated time:</span>
+      <span>{{ estimatedTime.min }} min {{ estimatedTime.sec}} sec</span>
+    </p>
+  </div>
 
 </ion-content>

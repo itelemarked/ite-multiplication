@@ -21,7 +21,9 @@ import { HomePage } from './pages/home/home.page';
 import { TestPage } from './pages/test/test.page';
 import { TrainingPage } from './pages/training/training.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
+
 import { NumericKeyboardComponent } from './components/numeric-keyboard/numeric-keyboard.component';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 
 @NgModule({
@@ -33,6 +35,7 @@ import { NumericKeyboardComponent } from './components/numeric-keyboard/numeric-
     TrainingPage,
     StatisticsPage,
     NumericKeyboardComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,

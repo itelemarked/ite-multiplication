@@ -29,8 +29,6 @@ export class TestsComponent implements OnInit {
       this.tests = res;
     })
 
-    afs.doc<{[key:string]: any}>('tests/test10').update({'multiples.3x3.successes': 4})
-
 
     // setTimeout(() => {
     //   console.log('timeout')

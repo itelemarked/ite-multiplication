@@ -1,0 +1,30 @@
+:host {
+  --outer-color: transparent;
+  --color: var(--ion-color-primary);
+  --color-transition-time: 1000ms;
+  --progress-width: 10%;
+  --progress-transition-time: 200ms;
+}
+
+:host {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+}
+
+.outer {
+  background-color: var(--outer-color);
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--color);
+  border-radius: 0.5em;
+  overflow: hidden;
+  transition: border-color var(--color-transition-time);
+}
+
+.inner {
+  background-color: var(--color);
+  width: var(--progress-width);
+  height: 100%;
+  transition: background-color var(--color-transition-time), width var(--progress-transition-time);
+}

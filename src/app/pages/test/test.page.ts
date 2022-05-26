@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-test',
@@ -13,7 +14,7 @@ export class TestPage implements OnInit {
   events: number;
   estimatedTime: {min: number, sec: number};
 
-  constructor() {
+  constructor(private router: Router) {
     this.timeInterval = 2;
     this.animationTime = 1;
     this.successesNeeded = 2;
@@ -48,6 +49,10 @@ export class TestPage implements OnInit {
     type === 'increment' ? this.successesNeeded++ : this.successesNeeded--;
     this.events = this.getEvents(this.successesNeeded);
     this.estimatedTime = this.getEstimatedTime(this.timeInterval, this.animationTime, this.events);
+  }
+
+  onStart() {
+    this.router.navigateByUrl('/test-progress', {state: {hello: 'world'}})
   }
 
 }

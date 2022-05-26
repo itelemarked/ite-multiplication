@@ -19,6 +19,7 @@ import { environment } from '../environments/environment';
 import { AuthPage } from './pages/auth/auth.page';
 import { HomePage } from './pages/home/home.page';
 import { TestPage } from './pages/test/test.page';
+import { TestProgressPage } from './pages/test-progress/test-progress.page';
 import { TrainingPage } from './pages/training/training.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
 
@@ -32,10 +33,11 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
     AuthPage,
     HomePage,
     TestPage,
+    TestProgressPage,
     TrainingPage,
     StatisticsPage,
     NumericKeyboardComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
   ],
   imports: [
     BrowserModule,

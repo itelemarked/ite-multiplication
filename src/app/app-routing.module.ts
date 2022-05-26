@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthPage } from './pages/auth/auth.page';
 import { HomePage } from './pages/home/home.page';
 import { StatisticsPage } from './pages/statistics/statistics.page';
+import { TestProgressPage } from './pages/test-progress/test-progress.page';
 import { TestPage } from './pages/test/test.page';
 import { TrainingPage } from './pages/training/training.page';
 
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'auth', component: AuthPage },
   { path: 'home', component: HomePage },
   { path: 'test', component: TestPage },
+  { path: 'test-progress', component: TestProgressPage},
   { path: 'training', component: TrainingPage },
   { path: 'statistics', component: StatisticsPage },
 

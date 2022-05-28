@@ -7,16 +7,16 @@ export interface IMultiple {
   fails: number;
 }
 
-export interface IKeyStringIMultiple {
-  [key:string]: IMultiple
+export interface IMultipleMap {
+  [key:string]: IMultiple;
 }
 
 
-export function getMultiplesFromBases(bases: number[]): IKeyStringIMultiple {
+export function getMultiplesFromBases(bases: number[]): IMultipleMap {
   const orderedBases = bases.sort((a: number, b: number) => a - b)
 
-  let results: IKeyStringIMultiple = {}
-  
+  let results: IMultipleMap = {}
+
   for(let i = 0; i < orderedBases.length; i++) {
     for(let j = i; j < orderedBases.length; j++) {
       const m = new Multiple({n1: orderedBases[i], n2: orderedBases[j], successes: 0, fails: 0})
@@ -41,7 +41,7 @@ export class Multiple implements IMultiple {
 
   constructor(iMultiple: IMultiple) {
     if (iMultiple.n1 > iMultiple.n2) throw new Error('Invalid arguments: n1 must be smaller or equal to n2!')
-    
+
     this.n1 = iMultiple.n1;
     this.n2 = iMultiple.n2;
     this.successes = iMultiple.successes;

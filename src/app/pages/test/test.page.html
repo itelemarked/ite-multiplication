@@ -9,40 +9,77 @@
 
 <ion-content class="ion-padding">
 
-  <div class="ion-padding-top">
-    <div style="display: flex; align-items: center;">
-      <span style="width: 50%;">Time interval:</span>
-      <span style="width: 20%;">{{ timeInterval }} sec</span>
-      <span style="width: 30%; text-align: right;">
-        <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;" (click)="changeTimeInterval('decrement')">-</ion-button>
-        <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;" (click)="changeTimeInterval('increment')">+</ion-button>
-      </span>
+  <div *ngIf="!hasPendingTest">
+    <div class="ion-padding-top">
+      <div style="display: flex; align-items: center;">
+        <span style="width: 50%;">Time interval:</span>
+        <span style="width: 20%;">{{ timeInterval }} sec</span>
+        <span style="width: 30%; text-align: right;">
+          <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;"
+            (click)="changeTimeInterval('decrement')">-</ion-button>
+          <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;"
+            (click)="changeTimeInterval('increment')">+</ion-button>
+        </span>
+      </div>
+    </div>
+
+    <div class="ion-padding-top">
+      <div style="display: flex; align-items: center;">
+        <span style="width: 50%;">Successes needed:</span>
+        <span style="width: 20%;">{{ successesNeeded }}</span>
+        <span style="width: 30%; text-align: right;">
+          <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;"
+            (click)="changeSuccessesNeeded('decrement')">-</ion-button>
+          <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;"
+            (click)="changeSuccessesNeeded('increment')">+</ion-button>
+        </span>
+      </div>
+    </div>
+
+    <div class="ion-padding-top">
+      <ion-button expand="block" size="large" (click)="onStart()">START</ion-button>
+    </div>
+
+    <div class="ion-padding-top" style="color: gray; font-size: 0.9em; font-style: italic;">
+      <p>
+        <span style="display: inline-block; width: 50%;">Events:</span>
+        <span>{{ events }}</span>
+        <br>
+        <span style="display: inline-block; width: 50%;">Estimated time:</span>
+        <span>{{ estimatedTime.min }} min {{ estimatedTime.sec}} sec</span>
+      </p>
     </div>
   </div>
 
-  <div class="ion-padding-top">
-    <div style="display: flex; align-items: center;">
-      <span style="width: 50%;">Successes needed:</span>
-      <span style="width: 20%;">{{ successesNeeded }}</span>
-      <span style="width: 30%; text-align: right;">
-        <ion-button fill="outline" style="margin: 0;--border-radius: 4px 0 0 4px;width: 40px;" (click)="changeSuccessesNeeded('decrement')">-</ion-button>
-        <ion-button fill="outline" style="margin: 0;--border-radius: 0 4px 4px 0;width: 40px;" (click)="changeSuccessesNeeded('increment')">+</ion-button>
-      </span>
+
+  <div *ngIf="hasPendingTest">
+    <div class="ion-padding-top" style="color: grey;">
+      <div style="display: flex; align-items: center;">
+        <span style="width: 50%;">Time interval:</span>
+        <span style="width: 20%;">{{ timeInterval }} sec</span>
+      </div>
     </div>
-  </div>
 
-  <div class="ion-padding-top">
-    <ion-button expand="block" size="large" (click)="onStart()">START</ion-button>
-  </div>
+    <div class="ion-padding-top" style="color: grey;">
+      <div style="display: flex; align-items: center;">
+        <span style="width: 50%;">Successes needed:</span>
+        <span style="width: 20%;">{{ successesNeeded }}</span>
+      </div>
+    </div>
 
-  <div class="ion-padding-top" style="color: gray; font-size: 0.9em; font-style: italic;">
-    <p>
-      <span style="display: inline-block; width: 50%;">Events:</span>
-      <span>{{ events }}</span>
-      <br>
-      <span style="display: inline-block; width: 50%;">Estimated time:</span>
-      <span>{{ estimatedTime.min }} min {{ estimatedTime.sec}} sec</span>
-    </p>
+    <div class="ion-padding-top">
+      <ion-button expand="block" size="large" (click)="onStart()">RESUME TEST XX</ion-button>
+    </div>
+
+    <div class="ion-padding-top" style="color: gray; font-size: 0.9em; font-style: italic;">
+      <p>
+        <span style="display: inline-block; width: 50%;">Events:</span>
+        <span>{{ events }}</span>
+        <br>
+        <span style="display: inline-block; width: 50%;">Estimated time:</span>
+        <span>{{ estimatedTime.min }} min {{ estimatedTime.sec}} sec</span>
+      </p>
+    </div>
   </div>
 
 </ion-content>

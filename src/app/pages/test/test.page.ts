@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class TestPage implements OnInit {
 
+  hasPendingTest = true;
+
   timeInterval: number;
   animationTime: number;
   successesNeeded: number;
@@ -38,7 +40,7 @@ export class TestPage implements OnInit {
 
   changeTimeInterval(type: 'increment' | 'decrement') {
     if(this.timeInterval === 1 && type === 'decrement') return;
-    
+
     type === 'increment' ? this.timeInterval++ : this.timeInterval--;
     this.estimatedTime = this.getEstimatedTime(this.timeInterval, this.animationTime, this.events);
   }

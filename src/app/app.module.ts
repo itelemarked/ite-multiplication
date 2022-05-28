@@ -26,6 +26,9 @@ import { StatisticsPage } from './pages/statistics/statistics.page';
 import { NumericKeyboardComponent } from './components/numeric-keyboard/numeric-keyboard.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
+import { TestingPage } from './@TESTING/testing.page/testing.page';
+import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
+
 
 @NgModule({
   declarations: [
@@ -38,6 +41,9 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
     StatisticsPage,
     NumericKeyboardComponent,
     ProgressBarComponent,
+
+    TestingPage,
+    Testing2Page,
   ],
   imports: [
     BrowserModule,

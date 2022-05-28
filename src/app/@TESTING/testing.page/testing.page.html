@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      TESTING!!
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <p>User: {{ (user$|async)?.username }}</p>
+  <ion-button (click)="auth.login('aaa', '111111')">User aaa</ion-button>
+  <ion-button (click)="auth.login('bbb', '222222')">User bbb</ion-button>
+
+  <div>
+    <ion-button (click)="addTest()" expand="block">Add test</ion-button>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let test of tests$|async" [routerLink]="'./' + test.id">
+      <ion-label>{{test.id}}</ion-label>
+      <ion-button slot="end" fill="clear" color="danger" (click)="removeTest(test.id)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

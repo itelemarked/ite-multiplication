@@ -52,15 +52,6 @@ export class Testing2Page implements OnInit {
       switchMap(testId => this.testsService.getTestById$$(testId).pipe(take(1)))
     )
 
-    test$.subscribe(test => {
-      if(test) {
-        const multiple = test.getMultipleById(multipleId);
-        if(multiple) {
-          multiple[prop] += 1;
-          this.testsService.editTestMultiple(test.id, multipleId, multiple.toJson())
-        }
-      }
-    })
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TestsService } from '../../services/tests.service';
 
 @Component({
   selector: 'app-test',
@@ -16,7 +17,7 @@ export class TestPage implements OnInit {
   events: number;
   estimatedTime: {min: number, sec: number};
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private testsService: TestsService) {
     this.timeInterval = 2;
     this.animationTime = 1;
     this.successesNeeded = 2;
@@ -54,7 +55,11 @@ export class TestPage implements OnInit {
   }
 
   onStart() {
-    this.router.navigateByUrl('/test-progress', {state: {hello: 'world'}})
+    // const timeInterval = this.timeInterval;
+    // const successNb = this.successesNeeded;
+    // this.testsService.createTest({timeInterval, successNb})
+
+    this.router.navigateByUrl('/test/progress')
   }
 
 }

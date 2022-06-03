@@ -10,8 +10,6 @@ export class TestProgressPage implements OnInit {
 
   constructor(private location: Location) { }
 
-  ngOnInit(): void {
-    console.log(this.location.getState())
-  }
+  ngOnInit(): void {}
 
 }

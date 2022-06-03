@@ -17,8 +17,10 @@ const routes: Routes = [
   { path: '', redirectTo: DEFAULT_ROUTE, pathMatch: 'full'},
   { path: 'auth', component: AuthPage },
   { path: 'home', component: HomePage },
-  { path: 'test', component: TestPage },
-  { path: 'test-progress', component: TestProgressPage},
+  { path: 'test', children: [
+    { path: '', component: TestPage },
+    { path: 'progress', component: TestProgressPage }
+  ]},
   { path: 'training', component: TrainingPage },
   { path: 'statistics', component: StatisticsPage },
 

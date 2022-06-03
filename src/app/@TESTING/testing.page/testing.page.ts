@@ -25,15 +25,14 @@ export class TestingPage implements OnInit {
   ngOnInit(): void {}
 
   addTest() {
-    const successNb = 2;
-    const timeInterval = 2;
-    this.testsService.addTest(successNb, timeInterval)
+    const inputs = {successNb: 2, timeInterval: 3};
+    this.testsService.createTest(inputs);
   }
 
-  removeTest(id: string, e: MouseEvent) {
+  removeTest(test: Test, e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    this.testsService.removeTest(id);
+    this.testsService.removeTest(test);
   }
 
 

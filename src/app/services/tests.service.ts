@@ -35,14 +35,14 @@ export class TestsService {
   }  
 
 
-  getTestById$$(testId: string): Observable<Test | null> {
+  getTestById$$(id: string): Observable<Test | null> {
     const user$ = this.auth.getUser$$();
     const test$ = (user: User | null): Observable<Test | null> => {
       if(user) {
-        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`).valueChanges().pipe(
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${id}`).valueChanges().pipe(
           map(test => {
             if(test) {
-              return new Test(testId, test)
+              return new Test(id, test)
             } else {
               return null;
             }
@@ -59,58 +59,103 @@ export class TestsService {
   }
 
 
-  addTest(successNb: number, timeInterval: number) {
-    const user$$ = this.auth.getUser$$().pipe(take(1));
-    const nextIdForUser$ = (user: User | null): Observable<{user: User, nextId: string} | null> => {
-      if (user) {
-        const coll$ = this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'})
-        return coll$.pipe(
+  getNextTestId$(): Observable<string> {
+    const user$ = this.auth.getUser$$().pipe(take(1));
+    const lastTest$ = (user: User | null): Observable<(ITest & {id: string}) | null> => {
+      if(user) {
+        return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'}).pipe(
           take(1),
           map(res => {
-            if (res.length === 0) {
-              return toTestId(1);
+            if(res.length === 0) {
+              return null;
             } else {
-              const lastIdNb = toNb(res[0].id);
-              const nextIdNb = lastIdNb + 1;
-              return toTestId(nextIdNb);
+              return res[0];
             }
-          }),
-          map(nextId => ({nextId, user}))
+          })
         )
       } else {
         return of(null);
       }
     }
 
-    user$$
-      .pipe(
-        mergeMap(usr => nextIdForUser$(usr))
-      )
-      .subscribe(res => {
-        if (res) {
-          const newDoc = this.afStore.doc<ITest>(`users/${res.user.uid}/tests/${res.nextId}`);
-
-          const completed = false;
-          const multiples = getMultipleMapFromBases([0,1,2,3,4,5,6,7,8,9,10,11,12]);
-          const creationDate = Date.now();
-
-          newDoc.set({successNb, timeInterval, completed, multiples, creationDate});
+    const nextId$ = user$.pipe(
+      switchMap(usr => lastTest$(usr)),
+      map(lastTest => {
+        if(lastTest) {
+          const lastIdNb = toNb(lastTest.id);
+          const nextIdNb = lastIdNb + 1;
+          return toTestId(nextIdNb);
+        } else {
+          return toTestId(1);
         }
       })
+    )
+
+    return nextId$;
   }
 
 
-  removeTest(testId: string) {
-    const user$ = this.auth.getUser$$().pipe(take(1));
+  createTest(iTest: Partial<ITest>) {
+
+    const user$ = this.auth.getUser$$();
+    const nextId$ = (user: User | null): Observable<{user: User | null, nextId: string} | null> => {
+      if(user) {
+        const coll = this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1));
+        return coll.valueChanges({idField: 'id'}).pipe(
+          map(res => {
+            if(res.length === 0) {
+              const nextId = toTestId(1);
+              return {user, nextId};
+            } else {
+              const lastIdNb = toNb(res[0].id)
+              const nextId = toTestId(lastIdNb + 1);
+              return {user, nextId};
+            }
+          })
+        )
+      } else {
+        return of(null)
+      }
+    }
+    const combined$ = user$.pipe(
+      switchMap(nextId$)
+    )
+    
+    const createNewTest = (user: User | null, testId: string, options?: Partial<ITest>) => {
+      const defaults: ITest = {
+        completed: false,
+        successNb: 2,
+        multiples: getMultipleMapFromBases([0,1,2,3,4,5,6,7,8,9,10,11,12]),
+        timeInterval: 3,
+        creationDate: Date.now()
+      }
+      
+      if(user) {
+        this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`).set({...defaults, ...options})
+      }
+    }
+
+    combined$.pipe(take(1)).subscribe(res => {
+      if(res) {
+        const {user, nextId} = res;
+        createNewTest(user, nextId, iTest);
+      }
+    })
+
+  }
+
+
+  removeTest(test: Test) {
+    const user$ = this.auth.getUser$$();
     const testDoc = (user: User | null) => {
       if (user) {
-        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`);
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${test.id}`);
       } else {
         return null;
       }
     }
 
-    user$.subscribe(usr => testDoc(usr)?.delete())
+    user$.pipe(take(1)).subscribe(usr => testDoc(usr)?.delete())
   }
 
 
@@ -127,10 +172,13 @@ export class TestsService {
     user$.subscribe(usr => testDoc(usr)?.update(test.toJson()))
   }
 
+}
 
-  // editTest(testId: string, options: Partial<ITest>) {
+
+
+  // editTestMultiple(testId: string, multipleId: string, multiple: IMultiple) {
   //   const user$ = this.auth.getUser$$().pipe(take(1));
-  //   const testDoc = (user: IUser | null) => {
+  //   const testDoc = (user: User | null) => {
   //     if(user) {
   //       return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`)
   //     } else {
@@ -138,25 +186,10 @@ export class TestsService {
   //     }
   //   }
 
-  //   user$.subscribe(usr => testDoc(usr)?.update(options))
+  //   user$.subscribe(usr => testDoc(usr)?.update({
+  //     [`multiples.${multipleId}`]: multiple
+  //   }))
   // }
-
-  editTestMultiple(testId: string, multipleId: string, multiple: IMultiple) {
-    const user$ = this.auth.getUser$$().pipe(take(1));
-    const testDoc = (user: User | null) => {
-      if(user) {
-        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`)
-      } else {
-        return null;
-      }
-    }
-
-    user$.subscribe(usr => testDoc(usr)?.update({
-      [`multiples.${multipleId}`]: multiple
-    }))
-  }
-  
-}
 
 
   // editTest(test: Test) {
@@ -177,4 +210,61 @@ export class TestsService {
   //     foundIMultiple!.successes = multiple.successes;
   //     foundIMultiple!.fails = multiple.fails;
   //   }
+  // }
+
+
+
+
+  // editTest(testId: string, options: Partial<ITest>) {
+  //   const user$ = this.auth.getUser$$().pipe(take(1));
+  //   const testDoc = (user: IUser | null) => {
+  //     if(user) {
+  //       return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`)
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+
+  //   user$.subscribe(usr => testDoc(usr)?.update(options))
+  // }
+
+
+    // addTest(successNb: number, timeInterval: number) {
+  //   const user$$ = this.auth.getUser$$().pipe(take(1));
+  //   const nextIdForUser$ = (user: User | null): Observable<{user: User, nextId: string} | null> => {
+  //     if (user) {
+  //       const coll$ = this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'})
+  //       return coll$.pipe(
+  //         take(1),
+  //         map(res => {
+  //           if (res.length === 0) {
+  //             return toTestId(1);
+  //           } else {
+  //             const lastIdNb = toNb(res[0].id);
+  //             const nextIdNb = lastIdNb + 1;
+  //             return toTestId(nextIdNb);
+  //           }
+  //         }),
+  //         map(nextId => ({nextId, user}))
+  //       )
+  //     } else {
+  //       return of(null);
+  //     }
+  //   }
+
+  //   user$$
+  //     .pipe(
+  //       mergeMap(usr => nextIdForUser$(usr))
+  //     )
+  //     .subscribe(res => {
+  //       if (res) {
+  //         const newDoc = this.afStore.doc<ITest>(`users/${res.user.uid}/tests/${res.nextId}`);
+
+  //         const completed = false;
+  //         const multiples = getMultipleMapFromBases([0,1,2,3,4,5,6,7,8,9,10,11,12]);
+  //         const creationDate = Date.now();
+
+  //         newDoc.set({successNb, timeInterval, completed, multiples, creationDate});
+  //       }
+  //     })
   // }

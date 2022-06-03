@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class TestPage implements OnInit {
 
-  hasPendingTest = true;
+  hasPendingTest = false;
 
   timeInterval: number;
   animationTime: number;

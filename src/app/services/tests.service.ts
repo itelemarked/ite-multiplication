@@ -2,9 +2,9 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { map, mergeMap, Observable, of, switchMap, take } from "rxjs";
-import { getMultiplesFromBases } from "../models/Multiple";
+import { getMultipleMapFromBases, IMultiple, IMultipleMap } from "../models/Multiple";
 import { ITest, Test, toNb, toTestId } from "../models/Test";
-import { IUser } from "../models/User";
+import { User } from "../models/User";
 import { AuthService } from "./auth.service";
 
 
@@ -16,143 +16,148 @@ export class TestsService {
 
   getTests$$(): Observable<Test[]> {
     const user$$ = this.auth.getUser$$();
-    const tests$ = (user: IUser) => {
-      return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc')).valueChanges({idField: 'id'})
+    const tests$ = (user: User | null): Observable<Test[]> => {
+      if (user) {
+        return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc')).valueChanges({idField: 'id'}).pipe(
+          map(res => res.map(r => {
+            const {id, ...iTest} = r;
+            return new Test(id, iTest);
+          }))
+        )
+      } else {
+        return of([]);
+      }
     }
 
     return user$$.pipe(
-      switchMap(usr => {
-        if(usr) {
-          return tests$(usr).pipe(
-            map(res => res.map(r => {
-              const {id, ...iTest} = r;
-              return new Test(id, iTest);
-            }))
-          )
-        } else {
-          return of([]);
-        }
-      })
-    )
-  }
+      switchMap(usr => tests$(usr))
+    );
+  }  
 
 
-  getTestById$(testId: string): Observable<Test | null> {
+  getTestById$$(testId: string): Observable<Test | null> {
     const user$ = this.auth.getUser$$();
-    const test$ = (user: IUser) => {
-      return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`).valueChanges().pipe(
-        map(res => {
-          if(res) {
-            return new Test(testId, res)
-          } else {
-            return null;
-          }
-        })
-      )
+    const test$ = (user: User | null): Observable<Test | null> => {
+      if(user) {
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`).valueChanges().pipe(
+          map(test => {
+            if(test) {
+              return new Test(testId, test)
+            } else {
+              return null;
+            }
+          })
+        )
+      } else {
+        return of(null)
+      }
     }
 
-    const obs$ = user$.pipe(
-      switchMap(usr => {
-        if(usr) {
-          return test$(usr)
-        } else {
-          return of(null)
-        }
-      })
-    )
-
-    return obs$;
-  }
-
-
-  getNextId$$(): Observable<string | null> {
-    const user$$ = this.auth.getUser$$();
-    const tests$ = (user: IUser) => {
-      return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc')
-        .limit(1))
-        .valueChanges({idField: 'id'})
-    }
-
-    return user$$.pipe(
-      switchMap(usr => {
-        if(usr) {
-          return tests$(usr).pipe(
-            map(res => {
-              if(res.length === 0) {
-                return 'test1';
-              } else {
-                const lastNb = toNb(res[0].id);
-                const nextNb = lastNb + 1;
-                return toTestId(nextNb);
-              }
-            })
-          )
-        } else {
-          return of(null);
-        }
-      })
+    return user$.pipe(
+      switchMap(usr => test$(usr))
     )
   }
+
 
   addTest(successNb: number, timeInterval: number) {
-    const user$$ = this.auth.getUser$$();
-    const nextId$ = this.getNextId$$().pipe(take(1));
-    const completed = false;
-    const multiples = getMultiplesFromBases([0,1,2,3,4,5,6,7,8,9,10,11,12]);
-    const creationDate = Date.now();
-
+    const user$$ = this.auth.getUser$$().pipe(take(1));
+    const nextIdForUser$ = (user: User | null): Observable<{user: User, nextId: string} | null> => {
+      if (user) {
+        const coll$ = this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'})
+        return coll$.pipe(
+          take(1),
+          map(res => {
+            if (res.length === 0) {
+              return toTestId(1);
+            } else {
+              const lastIdNb = toNb(res[0].id);
+              const nextIdNb = lastIdNb + 1;
+              return toTestId(nextIdNb);
+            }
+          }),
+          map(nextId => ({nextId, user}))
+        )
+      } else {
+        return of(null);
+      }
+    }
 
     user$$
       .pipe(
-        take(1),
-        mergeMap(usr => {
-          return nextId$.pipe(
-            map(nextId => {
-              return {usr, nextId};
-            })
-          )
-        })
+        mergeMap(usr => nextIdForUser$(usr))
       )
       .subscribe(res => {
-        if(res.usr && res.nextId) {
-          this.afStore.doc<ITest>(`users/${res.usr.uid}/tests/${res.nextId}`).set({successNb, timeInterval, completed, multiples, creationDate});
+        if (res) {
+          const newDoc = this.afStore.doc<ITest>(`users/${res.user.uid}/tests/${res.nextId}`);
+
+          const completed = false;
+          const multiples = getMultipleMapFromBases([0,1,2,3,4,5,6,7,8,9,10,11,12]);
+          const creationDate = Date.now();
+
+          newDoc.set({successNb, timeInterval, completed, multiples, creationDate});
         }
       })
   }
 
-  removeTest(id: string) {
-    const user$$ = this.auth.getUser$$();
-    const testDoc = (user: IUser) => {
-      return this.afStore.doc<ITest>(`users/${user.uid}/tests/${id}`)
+
+  removeTest(testId: string) {
+    const user$ = this.auth.getUser$$().pipe(take(1));
+    const testDoc = (user: User | null) => {
+      if (user) {
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`);
+      } else {
+        return null;
+      }
     }
 
-    user$$
-      .pipe(take(1))
-      .subscribe(usr => {
-        if(usr) {
-          testDoc(usr).delete()
-        }
-      })
+    user$.subscribe(usr => testDoc(usr)?.delete())
   }
 
-  // getTestById(testId: string): ITest | undefined {
-  //   return MOCK_TESTS.find(t => t.id === testId);
-  // }
 
-  // getFirstPendingTest(): ITest | undefined {
-  //   return MOCK_TESTS.find(t => !t.completed);
-  // }
+  updateTest(test: Test) {
+    const user$ = this.auth.getUser$$().pipe(take(1));
+    const testDoc = (user: User | null) => {
+      if(user) {
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${test.id}`)
+      } else {
+        return null;
+      }
+    }
 
-  // addTest(test: Test) {
-  //   MOCK_TESTS.push(test.toJson())
-  // }
+    user$.subscribe(usr => testDoc(usr)?.update(test.toJson()))
+  }
 
-  // removeTest(testId: string) {
-  //   const foundIndex = MOCK_TESTS.findIndex(t => t.id === testId);
-  //   if (foundIndex > -1) {
-  //     MOCK_TESTS.splice(foundIndex, 1);
+
+  // editTest(testId: string, options: Partial<ITest>) {
+  //   const user$ = this.auth.getUser$$().pipe(take(1));
+  //   const testDoc = (user: IUser | null) => {
+  //     if(user) {
+  //       return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`)
+  //     } else {
+  //       return null;
+  //     }
   //   }
+
+  //   user$.subscribe(usr => testDoc(usr)?.update(options))
   // }
+
+  editTestMultiple(testId: string, multipleId: string, multiple: IMultiple) {
+    const user$ = this.auth.getUser$$().pipe(take(1));
+    const testDoc = (user: User | null) => {
+      if(user) {
+        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${testId}`)
+      } else {
+        return null;
+      }
+    }
+
+    user$.subscribe(usr => testDoc(usr)?.update({
+      [`multiples.${multipleId}`]: multiple
+    }))
+  }
+  
+}
+
 
   // editTest(test: Test) {
   //   const foundITest: ITest | undefined = MOCK_TESTS.find(t => t.id === test.id);
@@ -173,5 +178,3 @@ export class TestsService {
   //     foundIMultiple!.fails = multiple.fails;
   //   }
   // }
-
-}

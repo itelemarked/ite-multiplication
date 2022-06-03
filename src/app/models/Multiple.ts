@@ -7,20 +7,62 @@ export interface IMultiple {
   fails: number;
 }
 
+/**
+ * Example: 
+ *    const iMultipleMap = {
+ *      (...)
+ *      '3x3': {n1: 3, n2: 3, successes: 0, fails: 0},
+ *      (...)
+ *    }
+ */
 export interface IMultipleMap {
   [key:string]: IMultiple;
 }
 
+/**
+ * Example: 
+ *    const iMultipleArr = [
+ *     (...)
+ *     {id: '3x3', n1: 3, n2: 3, successes: 0, fails: 0},
+ *     (...)
+ *    ]
+ */
+export type IMultipleArr = (IMultiple & { id: string })[];
 
-export function getMultiplesFromBases(bases: number[]): IMultipleMap {
+
+export function toMultipleArr(multipleMap: IMultipleMap): IMultipleArr {
+  const multipleArr: IMultipleArr = [];
+
+  for(let key in multipleMap) {
+    const id = key;
+    const {...rest} = multipleMap[key];
+    multipleArr.push({id, ...rest})
+  }
+
+  return multipleArr;
+}
+
+export function toMultipleMap(multipleArr: IMultipleArr): IMultipleMap {
+  const multipleMap: IMultipleMap = {};
+
+  multipleArr.forEach(m => {
+    const {id, ...rest} = m;
+    multipleMap[id] = {...rest};
+  })
+
+  return multipleMap;
+} 
+
+
+export function getMultipleMapFromBases(bases: number[]): IMultipleMap {
   const orderedBases = bases.sort((a: number, b: number) => a - b)
 
-  let results: IMultipleMap = {}
+  let results: IMultipleMap = {};
 
   for(let i = 0; i < orderedBases.length; i++) {
     for(let j = i; j < orderedBases.length; j++) {
       const m = new Multiple({n1: orderedBases[i], n2: orderedBases[j], successes: 0, fails: 0})
-      results[m.id] = m.toJson();
+      results[m.id as keyof IMultiple] = m.toJson();
     }
   }
 
@@ -28,7 +70,7 @@ export function getMultiplesFromBases(bases: number[]): IMultipleMap {
 }
 
 
-export class Multiple implements IMultiple {
+export class Multiple {
 
   n1: number;
   n2: number;
@@ -51,13 +93,22 @@ export class Multiple implements IMultiple {
     this.value = iMultiple.n1 * iMultiple.n2;
   }
 
-  randomString(): string {
-    if (Math.random() < 0.5) {
-      return this.n1.toString() + ' x ' + this.n2.toString();
-    } else {
+  title(inverted?: boolean): string {
+    if(inverted === true) {
       return this.n2.toString() + ' x ' + this.n1.toString();
+    } else {
+      return this.n1.toString() + ' x ' + this.n2.toString();
     }
   }
+
+  randomTitle(): string {
+    if (Math.random() < 0.5) {
+      return this.title();
+    } else {
+      return this.title(true);
+    }
+  }
+
 
   toJson(): IMultiple {
     return {

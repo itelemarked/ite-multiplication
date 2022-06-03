@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Observable, map, of } from "rxjs";
-import { IUser, toEmail, toUsername } from "../models/User";
+import { User, toUsername, toEmail } from "../models/User";
 
 
 
@@ -13,13 +13,13 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth) {}
 
-  getUser$$(): Observable<IUser | null> {
+  getUser$$(): Observable<User | null> {
     return this.afAuth.authState.pipe(
-      map(res => {
-        if(res) {
-          const uid = res.uid;
-          const username = toUsername(res.email!);
-          return {uid, username};
+      map(usr => {
+        if(usr) {
+          const uid = usr.uid;
+          const username = toUsername(usr.email!);
+          return new User(uid, username);
         } else {
           return null;
         }

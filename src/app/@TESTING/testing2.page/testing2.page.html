@@ -4,11 +4,22 @@
       <ion-back-button defaultHref="/TESTING"></ion-back-button>
     </ion-buttons>
     <ion-title>
-      {{ (test$|async)?.id }}
+      {{ (testId$$|async) }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <p>completed: {{ (test$|async)?.completed }}</p>
+  
+  <ion-list>
+    <ion-item *ngFor="let multiple of (multiples$$|async)">
+      <ion-label>
+        {{ multiple.title() }} = {{ multiple.value }}
+        <span style="padding-left: 20px;">{{multiple.successes}}/{{multiple.successes + multiple.fails}}</span>
+      </ion-label>
+      <ion-button slot="end" (click)="increment(multiple.id, 'successes', $event)">+</ion-button>
+      <ion-button slot="end" color="danger" (click)="increment(multiple.id, 'fails', $event)">+</ion-button>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

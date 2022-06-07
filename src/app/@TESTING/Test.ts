@@ -1,4 +1,5 @@
 
+// ###########  MULTIPLE  #############
 
 export interface IMultiple {
   n1: number;
@@ -77,14 +78,18 @@ export class Multiple implements IMultiple {
 
 
 
-
+// ###########  TEST  #############
 
 export interface ITest {
   timeInterval: number;
   successNb: number | null;
   creationDate: number;
   completed: boolean;
-  multiples: Multiple[];
+  multiples: IMultiple[];
+}
+
+export interface KeyString<T> {
+  [key: string]: keyof T
 }
 
 
@@ -92,7 +97,8 @@ const ID = 'test'
 
 export function toNb(testId: string): number {
   const idRegexp = new RegExp(`^${ID}\d+$`)
-  if(!testId.match(idRegexp)) throw new Error("Invalid testId: should be format 'testXX' where XX is an integger")
+  // if(!testId.match(idRegexp)) throw new Error("Invalid testId: should be format 'testXX' where XX is an integger")
+  if(!testId.match(/^test\d+$/)) throw new Error("Invalid testId: should be format 'testXX' where XX is an integger")
   return +testId.replace(ID, '');
 }
 
@@ -102,8 +108,6 @@ export function toTestId(nb: number): string {
 }
 
 
-
-
 export class Test implements ITest {
 
   timeInterval: number;
@@ -111,7 +115,7 @@ export class Test implements ITest {
   creationDate: number;
   completed: boolean;
   multiples: Multiple[];
-  
+
   id: string;
 
   constructor(id: string, iTest: ITest) {
@@ -119,7 +123,7 @@ export class Test implements ITest {
     this.successNb = iTest.successNb;
     this.timeInterval = iTest.timeInterval;
     this.creationDate = iTest.creationDate;
-    this.multiples = iTest.multiples;
+    this.multiples = iTest.multiples.map(m => new Multiple(m));
 
     this.id = id;
   }

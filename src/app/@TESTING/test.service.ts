@@ -13,11 +13,22 @@ export class TestsService {
 
   constructor(private afStore: AngularFirestore, private auth: AuthService) {}
 
-  getTests$$(): Observable<Test[]> {
+  getTests$$(options?: Partial<(ITest & {id: string})>): Observable<Test[]> {
     const user$$ = this.auth.getUser$$();
-    const tests$ = (user: User | null): Observable<Test[]> => {
+    const tests$$ = (user: User | null): Observable<Test[]> => {
       if (user) {
         return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc')).valueChanges({idField: 'id'}).pipe(
+          map(res => res.filter(r => {
+            let match = true;
+            if (options !== undefined) {
+              for(let key in options) {
+                if (options[key as keyof Partial<(ITest & {id: string})>] !== r[key as keyof (ITest & {id: string})]) {
+                  match = false;
+                }
+              }
+            }
+            return match;
+          })),
           map(res => res.map(r => {
             const {id, ...iTest} = r;
             return new Test(id, iTest);
@@ -29,69 +40,45 @@ export class TestsService {
     }
 
     return user$$.pipe(
-      switchMap(usr => tests$(usr))
+      switchMap(usr => tests$$(usr))
     );
-  }  
-
-
-  getTestById$$(id: string): Observable<Test | null> {
-    const user$ = this.auth.getUser$$();
-    const test$ = (user: User | null): Observable<Test | null> => {
-      if(user) {
-        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${id}`).valueChanges().pipe(
-          map(test => {
-            if(test) {
-              return new Test(id, test)
-            } else {
-              return null;
-            }
-          })
-        )
-      } else {
-        return of(null)
-      }
-    }
-
-    return user$.pipe(
-      switchMap(usr => test$(usr))
-    )
   }
 
 
-  getNextTestId$(): Observable<string> {
-    const user$ = this.auth.getUser$$().pipe(take(1));
-    const lastTest$ = (user: User | null): Observable<(ITest & {id: string}) | null> => {
-      if(user) {
-        return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'}).pipe(
-          take(1),
-          map(res => {
-            if(res.length === 0) {
-              return null;
-            } else {
-              return res[0];
-            }
-          })
-        )
-      } else {
-        return of(null);
-      }
-    }
+  // getNextTestId$(): Observable<string> {
+  //   const user$ = this.auth.getUser$$().pipe(take(1));
+  //   const lastTest$ = (user: User | null): Observable<(ITest & {id: string}) | null> => {
+  //     if(user) {
+  //       return this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1)).valueChanges({idField: 'id'}).pipe(
+  //         take(1),
+  //         map(res => {
+  //           if(res.length === 0) {
+  //             return null;
+  //           } else {
+  //             return res[0];
+  //           }
+  //         })
+  //       )
+  //     } else {
+  //       return of(null);
+  //     }
+  //   }
 
-    const nextId$ = user$.pipe(
-      switchMap(usr => lastTest$(usr)),
-      map(lastTest => {
-        if(lastTest) {
-          const lastIdNb = toNb(lastTest.id);
-          const nextIdNb = lastIdNb + 1;
-          return toTestId(nextIdNb);
-        } else {
-          return toTestId(1);
-        }
-      })
-    )
+  //   const nextId$ = user$.pipe(
+  //     switchMap(usr => lastTest$(usr)),
+  //     map(lastTest => {
+  //       if(lastTest) {
+  //         const lastIdNb = toNb(lastTest.id);
+  //         const nextIdNb = lastIdNb + 1;
+  //         return toTestId(nextIdNb);
+  //       } else {
+  //         return toTestId(1);
+  //       }
+  //     })
+  //   )
 
-    return nextId$;
-  }
+  //   return nextId$;
+  // }
 
 
   createTest(successNb: number, timeInterval: number): Observable<Test | null> {
@@ -99,6 +86,7 @@ export class TestsService {
     const nextId$$ = (user: User): Observable<string> => {
       const coll = this.afStore.collection<ITest>(`users/${user.uid}/tests`, ref => ref.orderBy('creationDate', 'desc').limit(1));
       return coll.valueChanges({idField: 'id'}).pipe(
+        take(1),
         map(res => {
           if(res.length === 0) {
             const nextId = toTestId(1);
@@ -117,7 +105,7 @@ export class TestsService {
       const creationDate = Date.now();
 
       const iTest = {completed, successNb, multiples, timeInterval, creationDate}
-      
+
       this.afStore.doc<ITest>(`users/${user.uid}/tests/${nextId}`).set(iTest);
       return new Test(nextId, iTest);
     }
@@ -142,17 +130,37 @@ export class TestsService {
   }
 
 
-  removeTest(test: Test) {
-    const user$ = this.auth.getUser$$();
-    const testDoc = (user: User | null) => {
+  removeTest(id: string): Observable<Test | null> {
+    const user$$ = this.auth.getUser$$();
+    const testDoc$ = (user: User | null) => {
       if (user) {
-        return this.afStore.doc<ITest>(`users/${user.uid}/tests/${test.id}`);
+        return of(this.afStore.doc<ITest>(`users/${user.uid}/tests/${id}`));
       } else {
-        return null;
+        return of(null);
       }
     }
 
-    user$.pipe(take(1)).subscribe(usr => testDoc(usr)?.delete())
+    return user$$.pipe(
+      take(1),
+      switchMap(usr => testDoc$(usr)),
+      switchMap(testDoc => {
+        if(testDoc) {
+          return testDoc.valueChanges().pipe(
+            take(1),
+            map(iTest => {
+              if(iTest) {
+                testDoc.delete();
+                return new Test(id, iTest);
+              } else {
+                return null;
+              }
+            })
+          )
+        } else {
+          return of(null);
+        }
+      })
+    )
   }
 
 

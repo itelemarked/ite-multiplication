@@ -131,7 +131,7 @@ export class Test implements ITest {
   toJson(): ITest {
     const completed = this.completed;
     const successNb = this.successNb;
-    const multiples = this.multiples;
+    const multiples = this.multiples.map(m => m.toJson());
     const timeInterval = this.timeInterval;
     const creationDate = this.creationDate;
     return {completed, successNb, multiples, timeInterval, creationDate}

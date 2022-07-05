@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 // import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 // import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -28,6 +29,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 
 import { TestingPage } from './@TESTING/testing.page/testing.page';
 import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
+import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
 
 
 @NgModule({
@@ -44,6 +46,7 @@ import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
 
     TestingPage,
     Testing2Page,
+    Testing3Page,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
 
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule.enablePersistence()
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireDatabaseModule,
 
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideAuth(() => getAuth()),

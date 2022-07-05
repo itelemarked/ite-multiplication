@@ -10,6 +10,7 @@ import { TrainingPage } from './pages/training/training.page';
 
 import { TestPage } from './pages/test/test.page';
 import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
+import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
 
 const DEFAULT_ROUTE = 'TESTING'
 
@@ -26,8 +27,9 @@ const routes: Routes = [
 
 
   { path: 'TESTING', children: [
-    { path: '', component: TestingPage },
-    { path: ':testId', component: Testing2Page },
+    // { path: '', component: TestingPage },
+    // { path: ':testId', component: Testing2Page },
+    { path: '', component: Testing3Page },
   ]}
 ];
 

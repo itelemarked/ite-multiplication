@@ -30,6 +30,7 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { TestingPage } from './@TESTING/testing.page/testing.page';
 import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
 import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
+import { BasesSelectComponent } from './@TESTING/testing3.page/bases-select.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
     StatisticsPage,
     NumericKeyboardComponent,
     ProgressBarComponent,
+    BasesSelectComponent,
 
     TestingPage,
     Testing2Page,

@@ -26,11 +26,13 @@ const routes: Routes = [
   { path: 'statistics', component: StatisticsPage },
 
 
-  { path: 'TESTING', children: [
-    // { path: '', component: TestingPage },
-    // { path: ':testId', component: Testing2Page },
-    { path: '', component: Testing3Page },
-  ]}
+  // { path: 'TESTING', children: [
+  //   // { path: '', component: TestingPage },
+  //   // { path: ':testId', component: Testing2Page },
+  //   { path: '', component: Testing3Page },
+  // ]}
+
+  { path: 'TESTING', loadChildren: () => import('./@TESTING/testing.module').then(m => m.TestingModule)}
 ];
 
 @NgModule({

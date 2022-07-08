@@ -26,11 +26,12 @@ import { StatisticsPage } from './pages/statistics/statistics.page';
 
 import { NumericKeyboardComponent } from './components/numeric-keyboard/numeric-keyboard.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { TestingModule } from './@TESTING/testing.module';
 
-import { TestingPage } from './@TESTING/testing.page/testing.page';
-import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
-import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
-import { BasesSelectComponent } from './@TESTING/testing3.page/bases-select.component';
+// import { TestingPage } from './@TESTING/testing.page/testing.page';
+// import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
+// import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
+// import { BasesSelectComponent } from './@TESTING/testing3.page/bases-select.component';
 
 
 @NgModule({
@@ -44,11 +45,6 @@ import { BasesSelectComponent } from './@TESTING/testing3.page/bases-select.comp
     StatisticsPage,
     NumericKeyboardComponent,
     ProgressBarComponent,
-    BasesSelectComponent,
-
-    TestingPage,
-    Testing2Page,
-    Testing3Page,
   ],
   imports: [
     BrowserModule,
@@ -65,6 +61,8 @@ import { BasesSelectComponent } from './@TESTING/testing3.page/bases-select.comp
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideAuth(() => getAuth()),
     // provideFirestore(() => getFirestore())
+
+    TestingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

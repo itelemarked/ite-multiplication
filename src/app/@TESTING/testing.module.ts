@@ -1,14 +1,15 @@
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
 import { IonicModule } from "@ionic/angular";
-
-import { TestingPage } from "./testing.page/testing.page";
-import { Testing2Page } from "./testing2.page/testing2.page";
-import { Testing3Page } from "./testing3.page/testing3.page";
-import { BasesSelectComponent } from "./base-select.component/bases-select.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule, Routes } from "@angular/router";
+
+import { TestingPage } from "./pages/testing.page/testing.page";
+import { Testing2Page } from "./pages/testing2.page/testing2.page";
+import { Testing3Page } from "./pages/testing3.page/testing3.page";
+
+import { ToggleButtonComponent } from './components/toggle-button/toggle-button.component';
+import { BasesPickerComponent } from './components/bases-picker/bases-picker.component';
 
 
 
@@ -23,13 +24,14 @@ const COMPONENTS = [
   Testing2Page,
   Testing3Page,
 
-  BasesSelectComponent
+  ToggleButtonComponent,
+  BasesPickerComponent,
 ];
 
 
 @NgModule({
   declarations: [
-    ...COMPONENTS
+    ...COMPONENTS,
   ],
   imports: [
     CommonModule,

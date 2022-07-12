@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TestingPage } from './@TESTING/testing.page/testing.page';
+import { TestingPage } from './@TESTING/pages/testing.page/testing.page';
 
 import { AuthPage } from './pages/auth/auth.page';
 import { HomePage } from './pages/home/home.page';
@@ -9,8 +9,8 @@ import { TestProgressPage } from './pages/test-progress/test-progress.page';
 import { TrainingPage } from './pages/training/training.page';
 
 import { TestPage } from './pages/test/test.page';
-import { Testing2Page } from './@TESTING/testing2.page/testing2.page';
-import { Testing3Page } from './@TESTING/testing3.page/testing3.page';
+import { Testing2Page } from './@TESTING/pages/testing2.page/testing2.page';
+import { Testing3Page } from './@TESTING/pages/testing3.page/testing3.page';
 
 const DEFAULT_ROUTE = 'TESTING'
 

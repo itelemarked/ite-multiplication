@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, switchMap, take } from 'rxjs';
-import { IMultipleArr, Multiple } from '../../models/Multiple';
-import { TestsService } from '../../services/tests.service';
+import { IMultipleArr, Multiple } from '../../../models/Multiple';
+import { TestsService } from '../../../services/tests.service';
 
 @Component({
   selector: 'app-testing2.page',
@@ -21,6 +21,7 @@ export class Testing2Page implements OnInit {
     )
 
     this.multiples$$ = this.getMultiples$$();
+
 
     // setTimeout(() => {
     //   this.testsService.editTestMultiple('test4', '0x0', {successes: 1, fails: 3, n1: 0, n2: 0});

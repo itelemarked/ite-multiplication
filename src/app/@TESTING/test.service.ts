@@ -4,7 +4,7 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { map, mergeMap, Observable, of, switchMap, take } from "rxjs";
 import { User } from "../models/User";
 import { AuthService } from "../services/auth.service";
-import { ITest, multiplesFromBases, Test, toNb, toTestId } from "./Test";
+import { ITest, multiplesFromBases, Test, toNb, toTestId } from "./MultipleGroup/Test";
 
 
 

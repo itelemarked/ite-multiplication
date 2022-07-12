@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { interval, map, Observable, of, skip, switchMap, take, takeUntil, tap } from 'rxjs';
-import { User } from '../../models/User';
-import { AuthService } from '../../services/auth.service';
-import { Test } from '../Test';
-import { TestsService } from '../test.service';
+import { User } from '../../../models/User';
+import { AuthService } from '../../../services/auth.service';
+import { Test } from '../../MultipleGroup/Test';
+import { TestsService } from '../../test.service';
 
 
 

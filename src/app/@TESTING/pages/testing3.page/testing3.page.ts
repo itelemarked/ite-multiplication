@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Observable, take } from 'rxjs';
+import { MultipleGroup } from '../../MultipleGroup/MultipleGroup';
 
 @Component({
   selector: 'app-testing3',
@@ -11,7 +12,19 @@ export class Testing3Page {
 
   bases = [1,2]
 
+  constructor() {
+    const test1 = new MultipleGroup([6,7,9,6], 2, 2)
+    // test1.multiples.forEach(m => m.successes = 2);
+    // test1.multiples[1].successes = 1;
+    // test1.multiples[10].successes = 1;
 
+    // // console.log(test1.getUncompleteMultiples())
+    // console.log(test1.pickRandomUncompleteMultiple())
+  }
+
+  logChecked(newChecked: boolean) {
+    console.log(newChecked)
+  }
 
 
   // constructor(private afDatabase: AngularFireDatabase) {

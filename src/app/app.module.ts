@@ -3,14 +3,40 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { IonicModule } from '@ionic/angular';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+
+import { TestingComponent } from './modules/@Testing/testing.component';
+import { environment } from '../environments/environment';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AuthPage } from './pages/auth.page';
+import { AuthSetupComponent } from './modules/Auth/auth-setup.component';
+import { ToggleButtonComponent } from './components/toggle-button.component';
+import { SegmentButtonComponent } from './components/segment-button.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HomePage } from './pages/home.page';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TestingComponent,
+    AuthPage,
+    AuthSetupComponent,
+    ToggleButtonComponent,
+    SegmentButtonComponent,
+    HomePage
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]

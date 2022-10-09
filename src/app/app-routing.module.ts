@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TestingComponent } from './modules/@Testing/testing.component';
 import { AuthPage } from './pages/auth.page';
 import { HomePage } from './pages/home.page';
+import { TrainingPage } from './pages/training.page';
 
 const defaultRoute = 'auth'
 
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: '@testing', component: TestingComponent },
   { path: 'home', component: HomePage },
   { path: 'auth', component: AuthPage },
+  { path: 'training', component: TrainingPage },
   { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
 ];
 

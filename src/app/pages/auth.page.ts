@@ -3,14 +3,16 @@ import { AuthService } from '../modules/Auth/auth.service';
 
 @Component({
   selector: 'app-auth-page',
-  styles: [`
-    .auth-setup {
-      display: block;
-      width: 100%;
-      max-width: 500px;
-      margin: 20% auto;
-    }
-  `],
+  styles: [
+    `
+      .auth-setup {
+        display: block;
+        width: 100%;
+        max-width: 500px;
+        margin: 20% auto;
+      }
+    `,
+  ],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -19,9 +21,7 @@ import { AuthService } from '../modules/Auth/auth.service';
     </ion-header>
 
     <ion-content class="ion-padding">
-      
       <app-auth-setup class="auth-setup"></app-auth-setup>
-
     </ion-content>
   `,
 })

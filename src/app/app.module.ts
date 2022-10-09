@@ -6,16 +6,19 @@ import { AppComponent } from './app.component';
 import { IonicModule } from '@ionic/angular';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { environment } from '../environments/environment';
+import { AuthPage } from './pages/auth.page';
+import { HomePage } from './pages/home.page';
+import { TrainingPage } from './pages/training.page';
 
 import { TestingComponent } from './modules/@Testing/testing.component';
-import { environment } from '../environments/environment';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AuthPage } from './pages/auth.page';
 import { AuthSetupComponent } from './modules/Auth/auth-setup.component';
 import { ToggleButtonComponent } from './components/toggle-button.component';
 import { SegmentButtonComponent } from './components/segment-button.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HomePage } from './pages/home.page';
+import { TrainingSetupComponent } from './modules/Training/training-setup.component';
 
 
 @NgModule({
@@ -26,7 +29,9 @@ import { HomePage } from './pages/home.page';
     AuthSetupComponent,
     ToggleButtonComponent,
     SegmentButtonComponent,
-    HomePage
+    HomePage,
+    TrainingPage,
+    TrainingSetupComponent
   ],
   imports: [
     BrowserModule,

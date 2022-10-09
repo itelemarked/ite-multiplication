@@ -16,8 +16,9 @@ import { Component, OnInit } from '@angular/core';
     </ion-header>
 
     <ion-content>
-      <ion-button>go to training</ion-button>
+      <ion-button fill="outline">go to training</ion-button>
     </ion-content>
   `,
 })
 export class HomePage {}
+

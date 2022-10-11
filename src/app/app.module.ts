@@ -31,7 +31,7 @@ import { TrainingSetupComponent } from './modules/Training/training-setup.compon
     SegmentButtonComponent,
     HomePage,
     TrainingPage,
-    TrainingSetupComponent
+    TrainingSetupComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,7 +5,7 @@ import { AuthPage } from './pages/auth.page';
 import { HomePage } from './pages/home.page';
 import { TrainingPage } from './pages/training.page';
 
-const defaultRoute = 'auth'
+const defaultRoute = 'training'
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: defaultRoute },

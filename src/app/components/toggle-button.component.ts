@@ -42,7 +42,9 @@ import { addPropsToRefs } from '../models/Utils';
   ],
   template: `
     <ion-button
-      #ionButtonRef
+      expand="block"
+      [disabled]="inputIonButtonDisabled"
+      [color]="inputIonButtonColor"
       [fill]="isChecked ? 'solid' : 'outline'"
       (click)="onToggle()"
     >
@@ -50,10 +52,11 @@ import { addPropsToRefs } from '../models/Utils';
     </ion-button>
   `,
 })
-export class ToggleButtonComponent implements AfterViewInit {
-  @ViewChildren('ionButtonRef') ionButtonRefs!: QueryList<IonButton>;
+export class ToggleButtonComponent {
 
-  @Input('ion-button-props') ionButtonProps?: Partial<IonButton>;
+  @Input('disabled') inputIonButtonDisabled: boolean = false;
+
+  @Input('color') inputIonButtonColor: string = 'primary';
 
   @Input('checked') inputChecked?: boolean | (string | number)[];
 
@@ -71,10 +74,6 @@ export class ToggleButtonComponent implements AfterViewInit {
       this._standaloneChecked,
       this.inputValue
     );
-  }
-
-  ngAfterViewInit(): void {
-    addPropsToRefs(this.ionButtonProps, this.ionButtonRefs);
   }
 
   onToggle() {

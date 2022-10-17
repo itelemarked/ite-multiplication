@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Multiple } from './Mutliple';
 import { Training } from './Training';
 import { TrainingStoreService } from './training-store.service';
 // import SegmentButton from '@/app/components/SegmentButton.vue';
@@ -158,30 +159,42 @@ import { TrainingStoreService } from './training-store.service';
   `
 })
 export class TrainingSetupComponent implements OnInit {
-  // training: Training;
-  multiplesCount!: number;
 
-  trainingInProgress: boolean = false;
-  timeInterval: number = 2;
   requiredSuccesses: number = 3;
+  timeInterval: number = 2;
   selectedBases: boolean | (string | number)[] = [1, 3, 4];
-  mainButtonDisabled: boolean = false;
-  mainButtonText: string = 'Start';
-  descriptionSuccessesRequiredText: string = 'Total successes required:';
-  descriptionSuccessesRequiredValue: number = 63;
-  descriptionEstimatedTimeText: string = 'Estimated time:';
-  descriptionEstimatedTimeValue: number = 174;
+  
+  currentTraining!: Training;
+  
+  trainingInProgress!: boolean;
+  mainButtonDisabled!: boolean;
+  mainButtonText!: string;
+  descriptionSuccessesRequiredText!: string;
+  descriptionSuccessesRequiredValue!: number;
+  descriptionEstimatedTimeText!: string;
+  descriptionEstimatedTimeValue!: number;
 
   readonly FACTORS = [1,2,3,4,5,6,7,8,9,10,11,12];
   readonly ANIMATION_TIME = 1;
 
-  constructor(trainingStore: TrainingStoreService) {
-    trainingStore.storedTraining$.subscribe(this.onStoredTrainingChange.bind(this));
+  constructor(private trainingStore: TrainingStoreService) {
+    // trainingStore.storedTraining$.subscribe(this.onStoredTrainingChange.bind(this));
+    // console.log(this._getMultiplesByBases(this.FACTORS, [5,6,7]).map(m => m.id))
+    this._getMultiplesByBases(this.FACTORS, [5,6,7])
   }
 
   ngOnInit(): void {
-    this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
+    this.trainingStore.fetch().then(fetchedTraining => {
+      if (!!fetchedTraining) {
+        this.currentTraining = fetchedTraining
+        this.requiredSuccesses = fetchedTraining.successNb;
+        this.timeInterval = fetchedTraining.timeInterval;
+        // this.selectedBases = 
+        
+      }
+    })
     this.mainButtonText = this._getMainButtonText(this.trainingInProgress);
+    this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
   }
 
   onBasesChange(newBases: boolean | (string | number)[]) {
@@ -195,11 +208,12 @@ export class TrainingSetupComponent implements OnInit {
     this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
   }
 
-  onStoredTrainingChange(newTraining: Training | null | undefined) {
-    if (!!newTraining) {
+  onStoredTrainingChange(newStoredTraining: Training | null | undefined) {
+    const currentTraining = this._getTraining(newStoredTraining, this.requiredSuccesses, this.timeInterval, this.selectedBases as number[], this.FACTORS);
+    if (!!newStoredTraining) {
       this.trainingInProgress = true;
-      this.timeInterval = newTraining.getTimeInterval();
-      this.requiredSuccesses = newTraining.getSuccessNb();
+      this.timeInterval = newStoredTraining.timeInterval;
+      this.requiredSuccesses = newStoredTraining.successNb;
       // (...)
     } else {
       this.trainingInProgress = false;
@@ -250,4 +264,48 @@ export class TrainingSetupComponent implements OnInit {
   // }
 
 
+  // private _getTraining(storedTraining: Training | null | undefined, requiredSuccesses: number, timeInterval: number, selectedBases: number[], factors: number[]) {
+  //   const getMultiplesByBases = this._getMultiplesByBases.bind(this);
+    
+  //   if (!!storedTraining) {
+  //     return storedTraining;
+  //   } else {
+  //     const multiples = getMultiplesByBases(factors, selectedBases);
+  //     return new Training(requiredSuccesses, timeInterval, multiples)
+  //   }   
+  // }
+
+  private  _getMultiplesByBases(factors: number[], bases: number[]): Multiple[] {
+    const getNoDuplicatesAscending = this._getNoDuplicatesAscending.bind(this)
+
+    const sortedBases = getNoDuplicatesAscending(bases);
+    const sortedFactors = getNoDuplicatesAscending(factors);
+    const multiples: Multiple[] = [];
+
+    let b: number;
+    let f: number;
+    for (let i = 0; i < sortedBases.length; i++) {
+      b = sortedBases[i];
+      for (let j = 0; j < factors.length; j++) {
+        f = sortedFactors[j];
+        if (!(sortedBases.includes(f) && f < b)) {
+          multiples.push(new Multiple(f, b));
+        }
+      }
+    }
+    return multiples;
+  }
+
+  private _getNoDuplicatesAscending(arr: number[]): number[] {
+    const uniques: number[] = [];
+    arr.forEach((a) => {
+      if (!uniques.includes(a)) uniques.push(a);
+    });
+    return uniques.sort((a,b)=> a-b);
+  }
+
+
 }
+
+
+

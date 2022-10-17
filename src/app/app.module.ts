@@ -10,11 +10,13 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { environment } from '../environments/environment';
+
+import { TestingPage } from './modules/@Testing/_testing.page';
 import { AuthPage } from './pages/auth.page';
 import { HomePage } from './pages/home.page';
 import { TrainingPage } from './pages/training.page';
 
-import { TestingComponent } from './modules/@Testing/testing.component';
+
 import { AuthSetupComponent } from './modules/Auth/auth-setup.component';
 import { ToggleButtonComponent } from './components/toggle-button.component';
 import { SegmentButtonComponent } from './components/segment-button.component';
@@ -24,13 +26,13 @@ import { TrainingSetupComponent } from './modules/Training/training-setup.compon
 @NgModule({
   declarations: [
     AppComponent,
-    TestingComponent,
     AuthPage,
+    HomePage,
+    TrainingPage,
+    
     AuthSetupComponent,
     ToggleButtonComponent,
     SegmentButtonComponent,
-    HomePage,
-    TrainingPage,
     TrainingSetupComponent,
   ],
   imports: [

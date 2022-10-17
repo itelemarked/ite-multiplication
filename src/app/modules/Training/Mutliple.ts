@@ -4,41 +4,40 @@ export class Multiple {
   private _successes: number;
   private _fails: number;
 
-  constructor(a: number, b: number, successes: number = 0, fails: number = 0) {
-    // make sure n1 is smaller or equal to n2
-    if (a <= b) {
-      this._n1 = a;
-      this._n2 = b;
-    } else {
-      this._n1 = b;
-      this._n2 = a;
-    }
-    this._successes = successes;
-    this._fails = fails;
-  }
-
-  getN1(): number {
+  get n1(): number {
     return this._n1;
   }
-  
-  getN2(): number {
+
+  get n2(): number {
     return this._n2;
   }
-  
-  getSuccesses(): number {
+
+  get successes(): number {
     return this._successes;
   }
-  
-  getFails(): number {
+
+  get fails(): number {
     return this._fails;
   }
-  
-  getResult(): number {
+
+  get result(): number {
     return this._n1 * this._n2;
   }
 
-  getId(): string {
+  get id(): string {
     return `${this._n1}x${this._n2}`;
+  }
+
+  constructor(
+    n1: number,
+    n2: number,
+    successes: number = 0,
+    fails: number = 0
+  ) {
+    this._n1 = n1;
+    this._n2 = n2;
+    this._successes = successes;
+    this._fails = fails;
   }
 
   getTitle(random: boolean = false): string {

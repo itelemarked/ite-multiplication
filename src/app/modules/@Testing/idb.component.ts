@@ -21,7 +21,7 @@ const STORE_NAME = 'localTraining';
 
 
 @Component({
-  selector: 'app-testing',
+  selector: 'app-idb',
   styles: [
   ],
   template: `
@@ -41,7 +41,7 @@ const STORE_NAME = 'localTraining';
   `
 
 })
-export class TestingComponent {
+export class IdbComponent {
 
   db = openDB(DB_NAME, DB_VERSION, {
     upgrade(db) {

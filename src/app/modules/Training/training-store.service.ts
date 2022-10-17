@@ -39,17 +39,17 @@ export class TrainingStoreService {
 
   constructor() {
     console.log('trainingStoreService constructor()')
-    this.getTraining().then((val: Training | null) => {
+    this.fetch().then((val: Training | null) => {
       this._storedTraining$.next(val);
     })
 
-    const newTraining = new Training(10,11,[new Multiple(1,1,2,2), new Multiple(1,2,9,8)])
-    this.setTraining(newTraining)
+    // const newTraining = new Training(10,11,[new Multiple(1,1,2,2), new Multiple(1,2,9,8)])
+    // this.setTraining(newTraining)
     //   .then(_ => console.log('training set successfully!'))
     //   .catch((reason) => console.error(reason))
   }
 
-  async setTraining(training: Training): Promise<void> {
+  async store(training: Training): Promise<void> {
     try {
       const db = await this.db;
       const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -70,21 +70,21 @@ export class TrainingStoreService {
 
   private _toTrainingDatas(training: Training): ITrainingDatas {
     const multiplesObj: IMultipleDatas = {};
-    training.getMultiples().forEach(m => {
-      const id = m.getId();
-      const successes = m.getSuccesses();
-      const fails = m.getFails();
+    training.multiples.forEach(m => {
+      const id = m.id;
+      const successes = m.successes;
+      const fails = m.fails;
       multiplesObj[id] = { successes, fails };
     })
 
     return {
-      successNb: training.getSuccessNb(),
-      timeInterval: training.getTimeInterval(),
+      successNb: training.successNb,
+      timeInterval: training.timeInterval,
       multipleDatas: multiplesObj
     }
   }
 
-  async getTraining(): Promise<Training | null> {
+  async fetch(): Promise<Training | null> {
     try {
       const db = await this.db;
       const tx = db.transaction(STORE_NAME, 'readonly');

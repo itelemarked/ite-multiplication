@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { openDB } from 'idb';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { deleteDB, openDB } from 'idb';
+import { BehaviorSubject, Observable, timeInterval } from 'rxjs';
 import { Multiple } from './Mutliple';
 import { Training } from './Training';
 
@@ -9,12 +9,6 @@ interface IMultipleDatas {
     successes: number;
     fails: number;
   }
-}
-
-interface ITrainingDatas {
-  successNb: number;
-  timeInterval: number;
-  multipleDatas: IMultipleDatas
 }
 
 const DB_NAME = 'iteMultipleDB';
@@ -34,115 +28,99 @@ export class TrainingStoreService {
     }
   });
 
-  private _storedTraining$ = new BehaviorSubject<Training | null | undefined>(undefined);
-  storedTraining$: Observable<Training | null | undefined> = this._storedTraining$.asObservable();
-
   constructor() {
-    console.log('trainingStoreService constructor()')
-    this.fetch().then((val: Training | null) => {
-      this._storedTraining$.next(val);
-    })
-
-    // const newTraining = new Training(10,11,[new Multiple(1,1,2,2), new Multiple(1,2,9,8)])
-    // this.setTraining(newTraining)
-    //   .then(_ => console.log('training set successfully!'))
-    //   .catch((reason) => console.error(reason))
+    this.test().then(console.log)
   }
 
-  async store(training: Training): Promise<void> {
-    try {
-      const db = await this.db;
-      const tx = db.transaction(STORE_NAME, 'readwrite');
+  async test() {
+    console.log('testing starts')
+    const db = await this.db;
 
-      const { successNb, timeInterval, multipleDatas } = this._toTrainingDatas(training);
-      tx.store.put(successNb, 'successNb');
-      tx.store.put(timeInterval, 'timeInterval');
-      tx.store.put(multipleDatas, 'multiples');
-      const done = await tx.done;
-      this._storedTraining$.next(training);
-      return done;
-    } 
+    console.log('testing ends')
+    return this.get('localTraining.successNb')
+  }
 
-    catch (err) {
-      console.warn('Unable to set training...', err)
+  /**
+   * returns Promise<any | null>
+   * Doesn't throw specific errors or warnings.
+   * It returns the value if found, null in any cases otherwise!
+   * It doesn't check if the path exists or not (it will returns null in case a wrong path has been given!)
+   * It transforms the value in given conditions (e.g if path is 'localTraining.multiples' it converts the value into a Multiple Array)
+   */
+  async get(path: string): Promise<any | null> {
+    let storeName: string;
+    let keyName: string | undefined;
+    let others: string[] | undefined;
+    [storeName, keyName, ...others] = path.split('.');
+
+    const db = await this.db;
+
+    // Particular case: returns the whole store
+    if (path === 'localTraining') {
+      const keyValObj: {[key:string]: any} = {};
+      const tx = db.transaction(storeName, 'readonly');
+      const keys = await tx.store.getAllKeys() as string[];
+      // there are currently no keys stored
+      if (keys.length === 0) {
+        return null;
+      }
+      const values = await tx.store.getAll() as any[];
+      for (let i = 0; i < keys.length; i++) {
+        keyValObj[keys[i]] = values[i];
+      }
+      return keyValObj;
     }
-  }
 
-  private _toTrainingDatas(training: Training): ITrainingDatas {
-    const multiplesObj: IMultipleDatas = {};
-    training.multiples.forEach(m => {
-      const id = m.id;
-      const successes = m.successes;
-      const fails = m.fails;
-      multiplesObj[id] = { successes, fails };
-    })
+    // Particular case: transform to multiples
+    if (path === 'localTraining.multiples') {
+      let result: Multiple[]
 
-    return {
-      successNb: training.successNb,
-      timeInterval: training.timeInterval,
-      multipleDatas: multiplesObj
+      const multiplesDatas = await db.get(storeName, keyName);
+      if (multiplesDatas === undefined) return null;
+      result = this._toMultiples(multiplesDatas);
+      return result;
     }
-  }
 
-  async fetch(): Promise<Training | null> {
-    try {
-      const db = await this.db;
-      const tx = db.transaction(STORE_NAME, 'readonly');
+    // Particular case: get single multiple
+    if (path.match(/^localTraining.multiples.\d+x\d+$/)) {
+      let result: Multiple;
 
-      const successNb: number = await tx.store.get('successNb');
-      const timeInterval: number = await tx.store.get('timeInterval');
-      const multipleDatas: IMultipleDatas = await tx.store.get('multiples');
-
-      if (typeof(successNb) !== 'number') throw new Error('Invalid database: successNb is not a number')
-      if (typeof(timeInterval) !== 'number') throw new Error('Invalid database: timeInterval is not a number')
-      // validate multipleDatas???
-
-      const trainingDatas: ITrainingDatas = { successNb, timeInterval, multipleDatas }
-      return this._toTraining(trainingDatas)
-    } 
-
-    catch (err) {
-      console.warn('Unable to get training...', err);
-      return null
+      const multiplesDatas = await db.get(storeName, keyName);
+      const id = path.match(/\d+x\d+$/)![0];
+      const data: {[key:string]:any} = {}
+      data[id] = multiplesDatas[id]
+      result = this._toMultiples(data)[0];
+      return result;
     }
+
+    // Generic case:
+    // invalid Storename (would throw an error)
+    if (!db.objectStoreNames.contains(storeName)) return null;
+
+    // result would return the stored value or undefined...
+    const result = db.get(storeName, keyName);
+    // transform undefined to null.
+    if (result === undefined) return null;
+    // return the stored value
+    return result;
   }
 
-  private _toTraining(trainingDatas: ITrainingDatas): Training {
-    const { successNb, timeInterval } = trainingDatas;
+
+  private _toMultiples(multipleDatas: IMultipleDatas): Multiple[] {
     const multiples: Multiple[] = [];
-    
-    for (let m in trainingDatas.multipleDatas) {
-      const n1 = +m.match(/^\d+/)![0];
-      const n2 = +m.match(/\d+$/)![0];
-      const successes = trainingDatas.multipleDatas[m].successes;
-      const fails = trainingDatas.multipleDatas[m].fails;
+    for(let key in multipleDatas) {
+      const id = key;
+      const n1 = +key.match(/^\d+/)!;
+      const n2 = +key.match(/\d+$/)!;
+      const successes = multipleDatas[key].successes;
+      const fails = multipleDatas[key].fails;
       multiples.push(new Multiple(n1, n2, successes, fails))
     }
-
-    return new Training(successNb, timeInterval, multiples);
+    return multiples;
   }
 
-  // async databaseExists(databaseName: string): Promise<boolean> {
-  //   const databaseInfos = await window.indexedDB.databases();
-  //   const found = databaseInfos.find(d => d.name === databaseName);
-  //   return found === undefined ? false : true;
-  // }
-
-  // async databaseHasValidTrainingStore(storeName: string): Promise<boolean> {
-
-  // }
-
-  // getTraining(): Promise<Training | null> {
-
-  // }
-
-  // private async _trainingStoreExists(): boolean {
-  //   return true;
-  // }
-
-  // async deleteDatabase() {
-  //   return window.indexedDB.deleteDatabase(DB_NAME);
-  // }
-
 }
+
+
+
 

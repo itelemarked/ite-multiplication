@@ -29,7 +29,7 @@ import { TrainingSetupComponent } from './modules/Training/training-setup.compon
     AuthPage,
     HomePage,
     TrainingPage,
-    
+
     AuthSetupComponent,
     ToggleButtonComponent,
     SegmentButtonComponent,
@@ -40,7 +40,7 @@ import { TrainingSetupComponent } from './modules/Training/training-setup.compon
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({mode: 'ios'}),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule

@@ -160,13 +160,13 @@ import { TrainingStoreService } from './training-store.service';
 })
 export class TrainingSetupComponent implements OnInit {
 
+  /** PROPS */
+
   requiredSuccesses: number = 3;
   timeInterval: number = 2;
   selectedBases: boolean | (string | number)[] = [1, 3, 4];
-  
-  currentTraining!: Training;
-  
-  trainingInProgress!: boolean;
+
+  trainingInProgress: boolean = false; // is initially 'undefined', then 'true' if store.get() resolved or 'false' if store.get() rejects or if no training is currently stored.
   mainButtonDisabled!: boolean;
   mainButtonText!: string;
   descriptionSuccessesRequiredText!: string;
@@ -183,47 +183,48 @@ export class TrainingSetupComponent implements OnInit {
     this._getMultiplesByBases(this.FACTORS, [5,6,7])
   }
 
-  ngOnInit(): void {
-    this.trainingStore.fetch().then(fetchedTraining => {
-      if (!!fetchedTraining) {
-        this.currentTraining = fetchedTraining
-        this.requiredSuccesses = fetchedTraining.successNb;
-        this.timeInterval = fetchedTraining.timeInterval;
-        // this.selectedBases = 
-        
-      }
-    })
-    this.mainButtonText = this._getMainButtonText(this.trainingInProgress);
-    this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
+
+  /** ACTIONS */
+
+  async ngOnInit() {
+    const requiredSuccesses = await this.trainingsStore.get('local/requiredSuccesses');
+
+    this.requiredSuccesses = requiredSuccesses;
+    this.timeInterval = await this.trainingsStore.get('local/timeInterval');
+    this.selectedBases = await this.trainingsStore.get('local/selectedBases');
+    this.trainingInProgress = (await this.multiplesStore.getByTraining('local')).find(m => m.successes < requiredSuccesses)
   }
+
+  onTimeIntervalChange(newTimeInterval: number) {}
+
+  onRequiredSuccessesChange(newReqSuccesses: number) {}
 
   onBasesChange(newBases: boolean | (string | number)[]) {
-    this.selectedBases = newBases;
-    this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
-  }
-
-  onTrainingInProgressButtonClick(newTrainingInProgress: boolean) {
-    this.trainingInProgress = newTrainingInProgress;
-    this.mainButtonText = this._getMainButtonText(this.trainingInProgress);
-    this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
-  }
-
-  onStoredTrainingChange(newStoredTraining: Training | null | undefined) {
-    const currentTraining = this._getTraining(newStoredTraining, this.requiredSuccesses, this.timeInterval, this.selectedBases as number[], this.FACTORS);
-    if (!!newStoredTraining) {
-      this.trainingInProgress = true;
-      this.timeInterval = newStoredTraining.timeInterval;
-      this.requiredSuccesses = newStoredTraining.successNb;
-      // (...)
-    } else {
-      this.trainingInProgress = false;
-      // (...)
-    }
+    // this.selectedBases = newBases;
+    // this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
   }
 
   onMainButtonClick() {}
 
+  // TEMP, TESTING ONLY
+  onTrainingInProgressButtonClick(newTrainingInProgress: boolean) {
+    // this.trainingInProgress = newTrainingInProgress;
+    // this.mainButtonText = this._getMainButtonText(this.trainingInProgress);
+    // this.mainButtonDisabled = this._getMainButtonDisabled(this.trainingInProgress, this.selectedBases);
+  }
 
+
+  /** GETTERS, DEPENDENCIES WITH OTHER PROPS */
+
+  // // TODO
+  // private async _getTrainingInProgress(store: TrainingStoreService): Promise<boolean> {
+  //   // const results$: any[] | null = await store.getAll(['training.timeInterval', 'training.requiredSuccesses', 'training.multiples']);
+  //   // if (!!results$ && results$.find(r => r === null) === undefined) {
+  //   //   return true;
+  //   // } else {
+  //   //   return false;
+  //   // }
+  // }
 
   private _getMainButtonDisabled(trainingInProgress: boolean, selectedBases: boolean | (string | number)[]): boolean {
     if (trainingInProgress) {
@@ -236,6 +237,16 @@ export class TrainingSetupComponent implements OnInit {
   private _getMainButtonText(trainingInProgress: boolean): string {
     return trainingInProgress ? 'Resume' : 'Start';
   }
+
+  // mainButtonText!: string;
+  // descriptionSuccessesRequiredText!: string;
+  // descriptionSuccessesRequiredValue!: number;
+  // descriptionEstimatedTimeText!: string;
+  // descriptionEstimatedTimeValue!: number;
+
+
+
+
 
   private _getDescriptionSuccessesRequiredText(trainingInProgress: boolean): string {
     return trainingInProgress ? 'Remaining successes:' : 'Total successes required:';
@@ -266,14 +277,17 @@ export class TrainingSetupComponent implements OnInit {
 
   // private _getTraining(storedTraining: Training | null | undefined, requiredSuccesses: number, timeInterval: number, selectedBases: number[], factors: number[]) {
   //   const getMultiplesByBases = this._getMultiplesByBases.bind(this);
-    
+
   //   if (!!storedTraining) {
   //     return storedTraining;
   //   } else {
   //     const multiples = getMultiplesByBases(factors, selectedBases);
   //     return new Training(requiredSuccesses, timeInterval, multiples)
-  //   }   
+  //   }
   // }
+
+
+  /** UTILS FUNCTIONS */
 
   private  _getMultiplesByBases(factors: number[], bases: number[]): Multiple[] {
     const getNoDuplicatesAscending = this._getNoDuplicatesAscending.bind(this)

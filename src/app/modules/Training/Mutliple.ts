@@ -1,8 +1,10 @@
 export class Multiple {
+  private _id: string;
   private _n1: number;
   private _n2: number;
   private _successes: number;
   private _fails: number;
+  private _result: number;
 
   get n1(): number {
     return this._n1;
@@ -21,11 +23,11 @@ export class Multiple {
   }
 
   get result(): number {
-    return this._n1 * this._n2;
+    return this._result;
   }
 
   get id(): string {
-    return `${this._n1}x${this._n2}`;
+    return this._id;
   }
 
   constructor(
@@ -34,8 +36,10 @@ export class Multiple {
     successes: number = 0,
     fails: number = 0
   ) {
+    this._id = `${n1}x${n2}`
     this._n1 = n1;
     this._n2 = n2;
+    this._result = n1 * n2;
     this._successes = successes;
     this._fails = fails;
   }

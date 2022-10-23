@@ -180,19 +180,21 @@ export class TrainingSetupComponent implements OnInit {
   constructor(private trainingStore: TrainingStoreService) {
     // trainingStore.storedTraining$.subscribe(this.onStoredTrainingChange.bind(this));
     // console.log(this._getMultiplesByBases(this.FACTORS, [5,6,7]).map(m => m.id))
-    this._getMultiplesByBases(this.FACTORS, [5,6,7])
+    // this._getMultiplesByBases(this.FACTORS, [5,6,7])
   }
 
 
   /** ACTIONS */
 
   async ngOnInit() {
-    const requiredSuccesses = await this.trainingsStore.get('local/requiredSuccesses');
+    // const requiredSuccesses = await this.trainingsStore.get('local/requiredSuccesses');
+    // const multiples = await this.multiplesStore.getByTraining('local');
+    // const inProgress = multiples.find(m => m.successes < requiredSuccesses)
 
-    this.requiredSuccesses = requiredSuccesses;
-    this.timeInterval = await this.trainingsStore.get('local/timeInterval');
-    this.selectedBases = await this.trainingsStore.get('local/selectedBases');
-    this.trainingInProgress = (await this.multiplesStore.getByTraining('local')).find(m => m.successes < requiredSuccesses)
+    // this.requiredSuccesses = requiredSuccesses;
+    // this.timeInterval = await this.trainingsStore.get('local/timeInterval');
+    // this.selectedBases = await this.trainingsStore.get('local/selectedBases');
+    // this.trainingInProgress = (await this.multiplesStore.getByTraining('local')).find(m => m.successes < requiredSuccesses)
   }
 
   onTimeIntervalChange(newTimeInterval: number) {}

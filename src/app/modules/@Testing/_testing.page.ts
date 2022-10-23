@@ -13,9 +13,10 @@ import { Component, OnInit } from '@angular/core';
     </ion-header>
 
     <ion-content>
-      
+
       <!-- <p>Testing page works!</p> -->
-      <app-pipe></app-pipe>
+      <!-- <app-pipe></app-pipe> -->
+      <app-storing></app-storing>
 
     </ion-content>
   `

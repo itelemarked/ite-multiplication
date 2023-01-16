@@ -14,9 +14,7 @@ import { Component, OnInit } from '@angular/core';
 
     <ion-content>
 
-      <!-- <p>Testing page works!</p> -->
-      <!-- <app-pipe></app-pipe> -->
-      <app-storing></app-storing>
+      <app-create-training></app-create-training>
 
     </ion-content>
   `

@@ -2,14 +2,10 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
+import { CommonModule } from "@angular/common";
 
 import { TestingPage } from "./_testing.page";
-
-import { IdbComponent } from "./idb.component";
-import { ComputedPipe, PipeComponent } from "./pipe.component";
-import { CommonModule } from "@angular/common";
-import { StoringComponent } from "./storing/storing.component";
-
+import { CreateTraining } from "./create-training.component";
 
 
 const routes: Routes = [
@@ -22,10 +18,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     TestingPage,
-    IdbComponent,
-    PipeComponent,
-    ComputedPipe,
-    StoringComponent
+    CreateTraining
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,38 @@
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { AngularfireModule } from './_Core/_angular-fire.module';
+
+import { AppComponent } from './app.component';
+
+
+
+const defaultRoute = 'home'
+
+const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: defaultRoute },
+  { path: 'testing', loadChildren: () => import('./z Testing/_testing.module').then(m => m.TestingModule) },
+  { path: 'home', loadChildren: () => import('./Home/_home.module').then(m => m.HomeModule) },
+  { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
+];
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes),
+    IonicModule.forRoot({mode: 'ios'}),
+    AngularfireModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

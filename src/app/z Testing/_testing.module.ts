@@ -4,7 +4,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
-import { TestingPage } from "./_testing.page";
+import { TestingPage } from "./testing.page";
 import { CreateTraining } from "./create-training.component";
 
 

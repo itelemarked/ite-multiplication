@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,11 +5,7 @@ import { Component, OnInit } from '@angular/core';
   styles: [``],
   template: `
     <ion-header>
-      <ion-toolbar>
-        <ion-title>
-          Home
-        </ion-title>
-      </ion-toolbar>
+      <app-toolbar title="Home"></app-toolbar>
     </ion-header>
 
     <ion-content>
@@ -19,8 +14,5 @@ import { Component, OnInit } from '@angular/core';
   `,
 })
 export class HomePage {
-
   constructor() {}
-
 }
-

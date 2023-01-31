@@ -6,6 +6,7 @@ import { CommonModule } from "@angular/common";
 
 import { TestingPage } from "./testing.page";
 import { TrainingRunningPage } from "./training-running.page";
+import { SharedModule } from "@app/_Shared/_shared.module";
 
 
 const routes: Routes = [
@@ -19,14 +20,15 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     TestingPage,
-    TrainingRunningPage
+    TrainingRunningPage,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule
   ],
   providers: [],
 })

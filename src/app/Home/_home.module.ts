@@ -4,6 +4,7 @@ import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
 import { HomePage } from "./home.page";
+import { SharedModule } from "@app/_Shared/_shared.module";
 
 
 
@@ -21,8 +22,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule
   ],
   providers: [],
 })
-export class HomeModule { }
+export class HomeModule {}

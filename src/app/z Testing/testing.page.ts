@@ -10,9 +10,7 @@ import { TrainingService } from './training.service';
   ],
   template: `
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Testing</ion-title>
-      </ion-toolbar>
+      <app-toolbar title="Testing"></app-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding">

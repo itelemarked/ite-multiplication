@@ -14,8 +14,8 @@ const defaultRoute = 'testing'
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: defaultRoute },
-  { path: 'testing', loadChildren: () => import('./z Testing/_testing.module').then(m => m.TestingModule) },
   { path: 'home', loadChildren: () => import('./Home/_home.module').then(m => m.HomeModule) },
+  { path: 'testing', loadChildren: () => import('./z Testing/_testing.module').then(m => m.TestingModule) },
   { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
 ];
 

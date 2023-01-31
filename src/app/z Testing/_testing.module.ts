@@ -5,12 +5,13 @@ import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
 import { TestingPage } from "./testing.page";
-import { CreateTraining } from "./create-training.component";
+import { TrainingRunningPage } from "./training-running.page";
 
 
 const routes: Routes = [
   // { path: '', pathMatch: 'full', redirectTo: defaultRoute },
   { path: '', component: TestingPage },
+  { path: 'training-running', component: TrainingRunningPage }
   // { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
 ];
 
@@ -18,7 +19,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     TestingPage,
-    CreateTraining
+    TrainingRunningPage
   ],
   imports: [
     CommonModule,

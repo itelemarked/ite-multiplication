@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 
 
 
-const defaultRoute = 'home'
+const defaultRoute = 'testing'
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: defaultRoute },

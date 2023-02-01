@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import { IMultiple, Multiple } from "./Multiple";
 
+
+
 @Injectable({providedIn: 'root'})
 export class TrainingService {
 

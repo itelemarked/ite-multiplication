@@ -1,35 +1,30 @@
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
-import { TestingPage } from "./testing.page";
-import { TrainingRunningPage } from "./training-running.page";
-import { SharedModule } from "@app/_Shared/_shared.module";
+import { HomePage } from "./home.page";
+import { SharedModule } from "@app/shared/shared.module";
+
 
 
 const routes: Routes = [
   // { path: '', pathMatch: 'full', redirectTo: defaultRoute },
-  { path: '', component: TestingPage },
-  { path: 'training-running', component: TrainingRunningPage }
+  { path: '', component: HomePage },
   // { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
 ];
 
 
 @NgModule({
   declarations: [
-    TestingPage,
-    TrainingRunningPage,
+    HomePage
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes),
     SharedModule
   ],
   providers: [],
 })
-export class TestingModule { }
+export class HomeModule {}

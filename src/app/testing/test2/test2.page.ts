@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterData } from './router-data-service';
 import { Multiple, Training } from './utils/multiple/interfaces';
+import { containsDuplicateNumber, containsNegativeNumber, generateMultiplesByBases } from './utils/multiple/multiple';
 
 
 @Component({
@@ -51,20 +51,14 @@ import { Multiple, Training } from './utils/multiple/interfaces';
 export class Test2Page {
   constructor(
     private router: Router,
-    private modalCtrl: ModalController,
-    private activatedRoute: ActivatedRoute,
     private routerData: RouterData
   ) {
-    // router.events.subscribe(e => {
-    //   console.log('routing events from Test2Page', e)
-    // })
-    console.log('Test2Page constructor')
+    const bases = [3,4,5]
+    const factors = [2,3,4,5,6]
+    console.log(generateMultiplesByBases(bases, factors))
   }
 
   onNewTraining(bases: string, successes: string) {
-    // if (bases.trim() === '' || successes.trim() === '')
-    //   throw new Error('invalid inputs!');
-    // const basesArr = bases.split(',').map((b) => +b.trim());
 
     const multiples: Multiple[] = [
       { id: '1x1', successes: 0, fails: 0 },
@@ -81,25 +75,5 @@ export class Test2Page {
     this.router.navigateByUrl('testing/test2/training-running2', {state: {bases}})
       .then(_ => this.routerData.emit({name: 'bob'}))
   }
-
-  // ionViewWillEnter() {
-  //   // const state = this.router.getCurrentNavigation()?.extras?.state;
-  //   // const bases = state ? state['bases']: null;
-  //   // console.log(`From ionViewWillEnter: ${bases}`)
-
-  //   console.log('Test2Page ionViewWillEnter')
-  // }
-
-  // ionViewDidEnter() {
-  //   console.log('Test2Page ionViewDidEnter')
-  // }
-
-  // ionViewWillLeave() {
-  //   console.log('Test2Page ionViewWillLeave')
-  // }
-
-  // ionViewDidLeave() {
-  //   console.log('Test2Page ionViewDidLeave')
-  // }
 
 }

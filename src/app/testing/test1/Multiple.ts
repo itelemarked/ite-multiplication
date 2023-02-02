@@ -1,5 +1,5 @@
 
-type TId = `${number}x${number}`;
+export type TId = `${number}x${number}`;
 
 export interface IMultipleData { successes: number, fails: number }
 
@@ -27,10 +27,15 @@ export class Multiple {
   readonly a: number;
   readonly b: number;
   readonly result: number;
-  get successes() { return this._successes; }
-  get fails() { return this._fails; }
 
+  get successes() {
+    return this._successes;
+  }
   private _successes: number;
+
+  get fails() {
+    return this._fails;
+  }
   private _fails: number;
 
 

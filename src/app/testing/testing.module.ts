@@ -4,23 +4,42 @@ import { RouterModule, Routes } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
-import { TestingPage } from "./testing.page";
-import { TrainingRunningPage } from "./training-running.page";
 import { SharedModule } from "@app/shared/shared.module";
+import { TestingComponent } from "./testing.component";
 
+import { Test1Component } from "./test1/test1.component";
+import { TrainingInProgressModal } from "./test1/training-in-progress.modal";
+
+import { Test2Page} from "./test2/test2.page";
+import { TrainingRunning2Page } from "./test2/training-running2.page";
+
+
+const TESTING_DEFAULT = 'test2';
 
 const routes: Routes = [
-  // { path: '', pathMatch: 'full', redirectTo: defaultRoute },
-  { path: '', component: TestingPage },
-  { path: 'training-running', component: TrainingRunningPage }
-  // { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
+  { path: '', component: TestingComponent, children: [
+    { path: '', pathMatch: 'full', redirectTo: TESTING_DEFAULT },
+
+    { path: 'test2', component: Test2Page },
+    { path: 'test2/training-running2', component: TrainingRunning2Page},
+
+    { path: '**', pathMatch: 'full', redirectTo: TESTING_DEFAULT },
+  ] },
+
+  // { path: 'test2/training-running2'},
+
 ];
 
 
 @NgModule({
   declarations: [
-    TestingPage,
-    TrainingRunningPage,
+    TestingComponent,
+
+    Test1Component,
+    TrainingInProgressModal,
+
+    Test2Page,
+    TrainingRunning2Page
   ],
   imports: [
     CommonModule,

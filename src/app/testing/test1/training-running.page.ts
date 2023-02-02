@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Multiple } from './Multiple';
-import { TrainingService } from './training.service';
+import { Training } from './Training';
+import { TrainingController } from './training.service';
 
 @Component({
   selector: 'app-training-running-page',
@@ -27,14 +28,18 @@ import { TrainingService } from './training.service';
 export class TrainingRunningPage implements OnInit {
 
   currentMultiple!: Multiple;
+  training: Training;
 
-  constructor(private training: TrainingService, private router: Router) {}
+  constructor(private trainingCtrl: TrainingController, private router: Router) {
+    this.training = this.trainingCtrl.get();
+  }
 
   ngOnInit(): void {
+
     if (this.training.randomPendingMultiple() === null) throw new Error('Training is completed...')
     this.currentMultiple = this.training.randomPendingMultiple()!
 
-    this.training.complete$.subscribe(_ => this.router.navigateByUrl('testing'))
+    this.training.complete$.subscribe(this.onComplete.bind(this))
   }
 
   onVerify(resultEl: HTMLInputElement) {
@@ -44,10 +49,13 @@ export class TrainingRunningPage implements OnInit {
       this.training.addFail(this.currentMultiple.id);
     }
     resultEl.value = '';
-    if (this.training.randomPendingMultiple() !== null) {
+    if (!this.training._isTrainingCompleted()) {
       this.currentMultiple = this.training.randomPendingMultiple()!;
     }
   }
 
+  onComplete() {
+    this.router.navigateByUrl('testing')
+  }
 
 }

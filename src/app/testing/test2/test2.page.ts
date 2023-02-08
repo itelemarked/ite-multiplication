@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterData } from './router-data-service';
-import { Multiple, Training } from './utils/multiple/interfaces';
-import { containsDuplicateNumber, containsNegativeNumber, generateMultiplesByBases } from './utils/multiple/multiple';
+import { Training } from './utils3/classes/training';
+import { createMultiple, generateMultiplesByBasesAndFactors } from './utils3/functions/multiple';
 
 
 @Component({
@@ -52,26 +52,17 @@ export class Test2Page {
   constructor(
     private router: Router,
     private routerData: RouterData
-  ) {
-    console.log(generateMultiplesByBases([3,4,5], [2,3,4,5,6]))
-  }
+  ) {}
 
   onNewTraining(bases: string, successes: string) {
-
-    const multiples: Multiple[] = [
-      { id: '1x1', successes: 0, fails: 0 },
-      { id: '1x2', successes: 0, fails: 0 },
-      { id: '1x3', successes: 0, fails: 0 },
-    ];
-
-    const training: Training = {
-      multiples,
-      successesRequired: 1,
-    };
-
+    if (bases.trim() === '' || successes.trim() === '') return;
+    const basesNb = bases.split(',').map(a => +a);
+    const successesNb = +successes
+    const multiples = generateMultiplesByBasesAndFactors(basesNb, [1,2]);
+    const training = new Training(successesNb, multiples);
 
     this.router.navigateByUrl('testing/test2/training-running2', {state: {bases}})
-      .then(_ => this.routerData.emit({name: 'bob'}))
+      .then(_ => this.routerData.emit({training}))
   }
 
 }

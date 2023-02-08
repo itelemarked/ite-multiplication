@@ -1,4 +1,4 @@
-import { Multiple, PositiveOrZeroNumber, PositiveOrZeroNumberArray, TId } from "./interfaces";
+import { Multiple, TId } from "./interfaces";
 
 
 function _getMinAndMaxFromId(id: TId): {min: number, max: number} {

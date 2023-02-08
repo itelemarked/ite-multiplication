@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouterData } from './router-data-service';
+import { Training } from './utils3/classes/training';
 
 @Component({
   selector: 'app-training-running2',
@@ -8,6 +9,9 @@ import { RouterData } from './router-data-service';
   template: `
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button routerLink="testing/test2">test2</ion-button>
+        </ion-buttons>
         <ion-title>
           training-running2
         </ion-title>
@@ -15,46 +19,32 @@ import { RouterData } from './router-data-service';
     </ion-header>
 
     <ion-content>
-      training-running2 works
-      <ion-button routerLink="testing/test2">go to test2</ion-button>
-      <p>name (passed): {{ name }}</p>
+
+      <div>
+        <h3>Training's multiples</h3>
+        <div *ngFor="let m of training?.getMultiples()">
+          <span>id: {{m.id}}</span>
+        </div>
+      </div>
     </ion-content>
   `,
 })
 export class TrainingRunning2Page {
 
-  name?: string;
+  training?: Training;
 
   constructor(private router: Router, private routerData: RouterData) {
-    // const state = this.router.getCurrentNavigation()?.extras?.state;
-    // const bases = state ? state['bases']: null;
-    // console.log(`From constuctor: ${bases}`)
-
-    // router.events.subscribe(e => {
-    //   console.log('routing events from TrainingRunning2Page', e)
-    // })
     console.log('TrainingRunning2Page constructor')
-    this.routerData.subscribe<string>(data => this.name = data['name'])
+    this.routerData.subscribe<Training>(data => {
+      this.training = data['training'];
+      this.training.complete$.subscribe(this.onTrainingComplete.bind(this))
+    })
   }
 
-  // ionViewWillEnter() {
-  //   // const state = this.router.getCurrentNavigation()?.extras?.state;
-  //   // const bases = state ? state['bases']: null;
-  //   // console.log(`From ionViewWillEnter: ${bases}`)
-
-  //   console.log('TrainingRunning2Page ionViewWillEnter')
-  // }
-
-  // ionViewDidEnter() {
-  //   console.log('TrainingRunning2Page ionViewDidEnter')
-  // }
-
-  // ionViewWillLeave() {
-  //   console.log('TrainingRunning2Page ionViewWillLeave')
-  // }
-
-  // ionViewDidLeave() {
-  //   console.log('TrainingRunning2Page ionViewDidLeave')
-  // }
+  onTrainingComplete(val: boolean) {
+    if (val) {
+      this.router.navigateByUrl('testing/test2')
+    }
+  }
 
 }

@@ -4,7 +4,7 @@ import { IonicModule } from "@ionic/angular";
 import { CommonModule } from "@angular/common";
 
 import { HomePage } from "./home.page";
-import { SharedModule } from "@app/shared/shared.module";
+import { SharedModule } from "../@shared/shared.module";
 
 
 

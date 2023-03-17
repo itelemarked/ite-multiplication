@@ -6,10 +6,16 @@ import { AppToolbarMenuModal } from "./components/app-toolbar/app-toolbar-menu.m
 import { AppToolbarComponent } from "./components/app-toolbar/app-toolbar.component";
 
 
+
+const COMPONENTS = [
+  AppToolbarComponent,
+  AppToolbarMenuModal
+];
+
+
 @NgModule({
   declarations: [
-    AppToolbarComponent,
-    AppToolbarMenuModal
+    ...COMPONENTS
   ],
   imports: [
     CommonModule,
@@ -17,8 +23,7 @@ import { AppToolbarComponent } from "./components/app-toolbar/app-toolbar.compon
     IonicModule
   ],
   exports: [
-    AppToolbarComponent,
-    AppToolbarMenuModal
+    ...COMPONENTS
   ]
 })
 export class SharedModule {}

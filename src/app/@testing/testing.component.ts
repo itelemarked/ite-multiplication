@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 
 @Component({
-  selector: 'app-testing',
   styles: [
   ],
   template: `

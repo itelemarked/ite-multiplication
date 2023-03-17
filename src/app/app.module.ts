@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AngularfireModule } from './core/_angular-fire.module';
+import { AngularfireModule } from './@core/angular-fire.module';
 
 import { AppComponent } from './app.component';
 
@@ -16,7 +16,7 @@ const defaultRoute = 'testing'
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: defaultRoute },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
-  { path: 'testing', loadChildren: () => import('./testing/testing.module').then(m => m.TestingModule) },
+  { path: 'testing', loadChildren: () => import('./@testing/testing.module').then(m => m.TestingModule) },
   { path: '**', pathMatch: 'full', redirectTo: defaultRoute },
 ];
 

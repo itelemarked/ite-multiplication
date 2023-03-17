@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterData } from './router-data-service';
 import { Multiple, Training } from './utils/multiple/interfaces';
-import { containsDuplicateNumber, containsNegativeNumber, generateMultiplesByBases } from './utils/multiple/multiple';
-
+import { create, generateMultiplesByBases, id } from './utils/multiple/multiple';
+// import { create, generateMultiplesByBases, id } from './utils/multiple/multiple';
 
 @Component({
   selector: 'app-test2',
@@ -55,15 +55,18 @@ export class Test2Page {
   ) {
     const bases = [3,4,5]
     const factors = [2,3,4,5,6]
-    console.log(generateMultiplesByBases(bases, factors))
+    // const f1 = [11,12]
+    // const f2 = {x: 1, y: 2}
+
+    // console.log(Object.keys(f1))
   }
 
   onNewTraining(bases: string, successes: string) {
 
     const multiples: Multiple[] = [
-      { id: '1x1', successes: 0, fails: 0 },
-      { id: '1x2', successes: 0, fails: 0 },
-      { id: '1x3', successes: 0, fails: 0 },
+      create({f1: 1, f2: 1}),
+      create({f1: 1, f2: 2}),
+      create({f1: 1, f2: 3})
     ];
 
     const training: Training = {

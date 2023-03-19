@@ -27,6 +27,10 @@ import { Component } from '@angular/core';
         <ion-button expand="block" color="danger" fill="outline">DISCARD TRAINING</ion-button>
       </div>
 
+      <p>isChecked: {{isChecked}}</p>
+      <!-- <app-toggle-button [checked]="isChecked" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
+      <app-toggle-button>toggle</app-toggle-button>
+
     </ion-content>
   `,
   styles: [``],
@@ -34,5 +38,17 @@ import { Component } from '@angular/core';
 export class TrainingSetupPage {
 
   isTrainingInProgress = false;
+
+  isChecked: boolean | (string|number)[] = false;
+
+  constructor() {
+    setTimeout(() => {
+      this.isChecked = true;
+    }, 3000);
+  }
+
+  // onCheckedChange(val: boolean) {
+  //   console.log(`checked changed: ${val}`)
+  // }
 
 }

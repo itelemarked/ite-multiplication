@@ -8,6 +8,7 @@ import { SharedModule } from "@app/@shared/shared.module";
 import { TestingComponent } from "./testing.component";
 
 import { TrainingSetupPage } from "./training/page.training-setup";
+import { ToggleButtonComponent } from "./training/toggle-button.component";
 
 
 const DEFAULT = {
@@ -27,7 +28,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     TestingComponent,
-    TrainingSetupPage
+    TrainingSetupPage,
+    ToggleButtonComponent
   ],
   imports: [
     CommonModule,

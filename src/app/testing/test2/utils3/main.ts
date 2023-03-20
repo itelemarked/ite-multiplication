@@ -1,17 +1,9 @@
-import { Training } from "./classes/training";
-import { createMultiple } from "./functions/multiple";
+import type {Negative, SetOptional} from 'type-fest';
 
-const multiples = [
-  createMultiple({f1: 2, f2: 3}),
-  createMultiple({f1: 3, f2: 3})
-]
-const training = new Training(1, multiples)
-training.complete$.subscribe(val => console.log(val))
+function negative<T extends number>(n: T) {
+  return n as Negative<T>
+}
 
-const m = training.getMultiples();
-console.log(m)
-training.addSuccess('2x3')
-console.log(m)
-training.addSuccess('3x3')
-console.log(m)
+let a: Negative<T extends number> = -1
+console.log(a)
 

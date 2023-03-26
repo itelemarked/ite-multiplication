@@ -28,8 +28,10 @@ import { Component } from '@angular/core';
       </div>
 
       <p>isChecked: {{isChecked}}</p>
-      <!-- <app-toggle-button [checked]="isChecked" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
-      <app-toggle-button>toggle</app-toggle-button>
+      <app-toggle-button [checked]="true">toggle</app-toggle-button>
+      <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
+      <!-- <app-toggle-button [(checked)]="isChecked" [value]="1">toggle 1</app-toggle-button>
+      <app-toggle-button [(checked)]="isChecked" [value]="2">toggle 2</app-toggle-button> -->
 
     </ion-content>
   `,
@@ -39,12 +41,16 @@ export class TrainingSetupPage {
 
   isTrainingInProgress = false;
 
-  isChecked: boolean | (string|number)[] = false;
+  isChecked: (string|number)[] | boolean = true;
 
   constructor() {
     setTimeout(() => {
-      this.isChecked = true;
+      // this.isChecked = [];
     }, 3000);
+  }
+
+  onCheckedChange(val: boolean) {
+    this.isChecked = val;
   }
 
   // onCheckedChange(val: boolean) {

@@ -28,11 +28,7 @@ import { CheckedInput, ValueInput } from './toggle-button.component';
         <ion-button expand="block" color="danger" fill="outline">DISCARD TRAINING</ion-button>
       </div>
 
-      <p>isChecked: {{isChecked}} <br> value: {{value}}</p>
-
-      <app-toggle-button [(checked)]="isChecked" [value]="value">
-        toggle button
-      </app-toggle-button>
+      <app-numeric-keyboard></app-numeric-keyboard>
 
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" [ionButtonProps]="{color: 'warning'}">toggle</app-toggle-button> -->
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
@@ -43,7 +39,11 @@ import { CheckedInput, ValueInput } from './toggle-button.component';
 
     </ion-content>
   `,
-  styles: [``],
+  styles: [`
+    app-numeric-keyboard {
+      height: 300px;
+    }
+  `],
 })
 export class TrainingSetupPage {
 

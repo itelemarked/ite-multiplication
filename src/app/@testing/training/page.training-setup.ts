@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CheckedInput, ValueInput } from './toggle-button.component';
 
 @Component({
   selector: 'app-training-setup',
@@ -27,11 +28,18 @@ import { Component } from '@angular/core';
         <ion-button expand="block" color="danger" fill="outline">DISCARD TRAINING</ion-button>
       </div>
 
-      <p>isChecked: {{isChecked}}</p>
-      <app-toggle-button [checked]="true">toggle</app-toggle-button>
+      <p>isChecked: {{isChecked}} <br> value: {{value}}</p>
+
+      <app-toggle-button [(checked)]="isChecked" [value]="value">
+        toggle button
+      </app-toggle-button>
+
+      <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" [ionButtonProps]="{color: 'warning'}">toggle</app-toggle-button> -->
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1">toggle 1</app-toggle-button>
       <app-toggle-button [(checked)]="isChecked" [value]="2">toggle 2</app-toggle-button> -->
+      <!-- <ion-button>toggle button</ion-button>
+      <ion-button>toggle button</ion-button> -->
 
     </ion-content>
   `,
@@ -41,16 +49,19 @@ export class TrainingSetupPage {
 
   isTrainingInProgress = false;
 
-  isChecked: (string|number)[] | boolean = true;
+  isChecked: CheckedInput = [2,3,4,5];
+  value: ValueInput = 1;
 
   constructor() {
     setTimeout(() => {
-      // this.isChecked = [];
+      // this.isChecked = [...(this.isChecked as number[]), 1]
+      this.value = 2
     }, 3000);
   }
 
   onCheckedChange(val: boolean) {
-    this.isChecked = val;
+    console.log('on checked changed')
+    // this.isChecked = val;
   }
 
   // onCheckedChange(val: boolean) {

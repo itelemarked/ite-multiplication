@@ -9,6 +9,8 @@ import { TestingComponent } from "./testing.component";
 
 import { TrainingSetupPage } from "./training/page.training-setup";
 import { ToggleButtonComponent } from "./training/toggle-button.component";
+import { ToggleButtonComponent2 } from "./training/toggle-button.component2";
+import { ToggleButtonComponent3 } from "./training/toggle-button.component3";
 
 
 const DEFAULT = {
@@ -29,7 +31,9 @@ const routes: Routes = [
   declarations: [
     TestingComponent,
     TrainingSetupPage,
-    ToggleButtonComponent
+    ToggleButtonComponent,
+    ToggleButtonComponent2,
+    ToggleButtonComponent3
   ],
   imports: [
     CommonModule,

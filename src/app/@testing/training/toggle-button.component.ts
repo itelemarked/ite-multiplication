@@ -1,198 +1,116 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
-
-
-/**
- * PROPS:
- *  - checked: boolean | (string | number)[]. Optional. Default: false. Responsive
- *  - disabled: boolean. Optional. Default: false. Responsive
- *  - ionButtonOptions: a object of ionButtons key-value pairs. Optional. Default: undefined.
- *    Note that the 'fill' property cannot / shouldn't be used since it is needed for the _isChecked property rendering.
- */
+import { Input, Output, EventEmitter, ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 
 
 
-type Checked = boolean | (string|number)[];
+export type CheckedInput = boolean | ValueInput[]
+export type ValueInput = string | number | undefined;
 
-// type CheckedModeStandalone = {tag: 'CheckedModeStandalone', checked: boolean};
-type CheckedModeBoolean = {tag: 'CheckedModeBoolean', checked: boolean};
-type CheckedModeArray = {tag: 'CheckedModeArray', checked: (string|number)[], value: string|number};
-type Mode = CheckedModeArray | CheckedModeBoolean;
+type CheckedModeBoolean = { tag: 'boolean', checked: boolean }
+type CheckedModeArray = { tag: 'array', checked: ValueInput[], value: ValueInput }
+type CheckedMode = CheckedModeBoolean | CheckedModeArray;
+
+const getMode = (checked: CheckedInput, value: ValueInput): CheckedMode => {
+  if (typeof(checked) === 'boolean') {
+    return { tag: 'boolean', checked }
+  }
+
+  return { tag: 'array', checked, value }
+}
+
+const isChecked = (mode: CheckedMode): boolean => {
+  switch (mode.tag) {
+    case 'boolean': {
+      return mode.checked;
+    }
+    case 'array': {
+      return mode.checked.includes(mode.value);
+    }
+  }
+}
+
+const setChecked = (mode: CheckedMode, val: boolean): CheckedMode => {
+  switch (mode.tag) {
+    case 'boolean': {
+      return { tag: 'boolean', checked: !mode.checked };
+    }
+    case 'array': {
+      const newChecked = val ? [...mode.checked, mode.value] : mode.checked.filter(m => m !== mode.value)
+      return { tag: 'array', checked: newChecked, value: mode.value }
+    }
+  }
+}
 
 
 @Component({
   selector: 'app-toggle-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ion-button [fill]="ionButtonFill" (click)="onToggle()">
+    <ion-button [fill]="fill" [color]="colorInput" (click)="onToggle()">
       <ng-content></ng-content>
     </ion-button>
   `,
   styles: [`
+    :host {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid gray;
+      justify-content: center;
+      min-width: 35px;
+      width: 70%;
+    }
 
+    ion-button {
+      width: 100%;
+    }
   `]
 })
-export class ToggleButtonComponent {
+export class ToggleButtonComponent implements OnInit {
 
-  @Input()
-  checked: boolean | (string|number)[] = false;
+  @Input('checked')
+  checkedInput: CheckedInput = false;
 
-  // private _checked: boolean = false;
-  // @Input()
-  // get checked(): boolean { return this._checked };
-  // set checked(val: boolean) {
-  //   this._checked = val;
-  //   console.log(`checked has changed! newval: ${val}`)
-  //   console.log(`this._checked: ${this._checked}`)
-  // }
+  @Input('value')
+  valueInput?: ValueInput;
 
-  @Input()
-  value?: string | number;
+  @Input('color')
+  colorInput?: string;
 
-  @Output()
-  checkedChange = new EventEmitter<boolean | (string|number)[]>();
+  @Output('checkedChange')
+  checkedChangeOutput = new EventEmitter<CheckedInput>();
 
-  get ionButtonFill(): 'solid' | 'outline' {
+  get fill(): 'solid' | 'outline' {
+    return this.isChecked() ? 'solid' : 'outline';
+  }
+
+  ngOnInit(): void {
     const mode = this.getMode();
-    switch (mode.tag) {
-      case 'CheckedModeBoolean':
-        return mode.checked ? 'solid' : 'outline';
-
-      case 'CheckedModeArray':
-        return mode.checked.includes(mode.value) ? 'solid' : 'outline';
+    if (mode.tag === 'array' && mode.value === undefined) {
+      console.warn(`ToggleButtonComponent: The checked property is of type 'array', but no value property has been defined. Checked: ${mode.checked}, Value: ${mode.value}`)
     }
   }
 
   onToggle() {
-    // Assigning manually this.checked = newChecked, a second assignement take place if the 'checked' property is two-way bound...
-    // but it makes sure it works as standalone mode (if the property isn't bound, the button will toggle anyway).
+    const newCheckedInput = this.setChecked(!this.isChecked);
 
-    const mode = this.getMode()
-    switch (mode.tag) {
-      case 'CheckedModeBoolean':
-      {
-        const newChecked = !mode.checked;
-        this.checkedChange.emit(newChecked);
-        this.checked = newChecked;
-        break;
-      }
-
-      case 'CheckedModeArray':
-      {
-        const newChecked = mode.checked.includes(mode.value) ? mode.checked.filter(val => val !== mode.value) : [...mode.checked, mode.value];
-        this.checkedChange.emit(newChecked);
-        this.checked = newChecked;
-        break;
-      }
-    }
+    this.checkedInput = newCheckedInput;
+    this.checkedChangeOutput.emit(newCheckedInput);
   }
 
-  private getMode(): Mode {
-    const checked = this.checked;
-    const value = this.value;
-
-    if (typeof(checked) === 'boolean') {
-      return { tag: 'CheckedModeBoolean', checked }
-    }
-
-    else if (Array.isArray(checked) && value !== undefined) {
-      return { tag: 'CheckedModeArray', checked, value }
-    }
-
-    else {
-      throw new Error(`'checked' or 'value' property is not valid`)
-    }
+  private getMode(): CheckedMode {
+    return getMode(this.checkedInput, this.valueInput);
   }
 
+  private isChecked(): boolean {
+    return isChecked(this.getMode());
+  }
 
-
-
-
-
-  // private _checked: Checked = false;
-  // private _value?: string | number;
-
-  // @Input('checked') checkedInput?: Checked;
-
-  // @Input('value') valueInput?: string | number;
-
-  // @Output('checkedChange') checkedChangeOutput = new EventEmitter<Checked>();
-
-  // get ionButtonFill(): 'solid' | 'outline' {
-  //   const checked = this._checked;
-  //   return checked ? 'solid' : 'outline';
-  // }
-
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if ('checkedInput' in changes) {
-  //     console.log('checkedInput changed!')
-  //     const newChecked = this.checkedInput as Checked;
-  //     this._checked = newChecked;
-  //   }
-  //   if ('valueInput' in changes) {
-  //     console.log('valueInput changed!')
-  //     const newValue = this.valueInput as string|number;
-  //     this._value = newValue;
-  //   }
-  // }
-
-  // // onToggle() {
-  // //   if (this.checkedInput !== undefined) {
-  // //     this.checkedChangeOutput.emit(!this.checkedInput)
-  // //   } else {
-  // //     const newChecked = !this._checked;
-  // //     this._checked = newChecked;
-  // //     this.checkedChangeOutput.emit(newChecked);
-  // //   }
-  // // }
-
-  // onToggle() {
-  //   const mode = this.getMode();
-  //   switch (mode.tag) {
-  //     case 'CheckedModeStandalone':
-  //     {
-  //       const newChecked = !this._checked;
-  //       this._checked = newChecked;
-  //       this.checkedChangeOutput.emit(newChecked);
-  //       break;
-  //     }
-
-  //     case 'CheckedModeBoolean':
-  //     {
-  //       const newChecked = !this.checkedInput!
-  //       this.checkedChangeOutput.emit(newChecked);
-  //       break;
-  //     }
-
-  //     case 'CheckedModeArray':
-  //     {
-  //       const isChecked = mode.checked.includes(mode.value);
-  //       if (isChecked) {
-  //         const newChecked = mode.checked.filter(item => item !== mode.value)
-  //         this.checkedChangeOutput.emit(newChecked);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // private getMode(): Mode {
-  //   if (this.checkedInput === undefined) {
-  //     if (typeof(this._checked) !== 'boolean') {
-  //       throw new Error(`Mode Error: Standalone`);
-  //     }
-  //     return {tag: 'CheckedModeStandalone', checked: this._checked};
-  //   }
-
-  //   if (typeof(this.checkedInput) === 'boolean') {
-  //     if (typeof(this._checked) !== 'boolean') {
-  //       throw new Error(`Mode Error: Boolean`);
-  //     }
-  //     return {tag: 'CheckedModeBoolean', checked: this._checked};
-  //   }
-
-
-  //     if (!Array.isArray(this._checked) || this._value === undefined) {
-  //       throw new Error(`Mode Error: Array`);
-  //     }
-  //     return {tag: 'CheckedModeArray', checked: this._checked, value: this._value}
-  // }
+  private setChecked(val: boolean): CheckedInput {
+    return setChecked(this.getMode(), val).checked;
+  }
 
 }
+
+
+
+
+

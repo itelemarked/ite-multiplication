@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CheckedInput, ValueInput } from './toggle-button.component';
+import { KeyboardOptions } from '../../@shared/components/keyboard/types';
 
 @Component({
   selector: 'app-training-setup',
@@ -8,7 +9,7 @@ import { CheckedInput, ValueInput } from './toggle-button.component';
       <app-toolbar title="Training Setup"></app-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding" [forceOverscroll]="false">
+    <ion-content [forceOverscroll]="false" class="size-sm">
 
       <div *ngIf="!isTrainingInProgress">
         <h3>Start new training</h3>
@@ -28,7 +29,8 @@ import { CheckedInput, ValueInput } from './toggle-button.component';
         <ion-button expand="block" color="danger" fill="outline">DISCARD TRAINING</ion-button>
       </div>
 
-      <app-numeric-keyboard></app-numeric-keyboard>
+      <p>Value: {{keyboardValue}}</p>
+      <app-numeric-keyboard [value]="keyboardValue" (keyTapped)="onKeyTapped($event)" (valueChange)="onValueChange($event)" [options]="options"></app-numeric-keyboard>
 
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" [ionButtonProps]="{color: 'warning'}">toggle</app-toggle-button> -->
       <!-- <app-toggle-button [(checked)]="isChecked" [value]="1" (checkedChange)="onCheckedChange($event)">toggle</app-toggle-button> -->
@@ -40,32 +42,36 @@ import { CheckedInput, ValueInput } from './toggle-button.component';
     </ion-content>
   `,
   styles: [`
-    app-numeric-keyboard {
-      height: 300px;
-    }
+
   `],
 })
 export class TrainingSetupPage {
 
-  isTrainingInProgress = false;
+  isTrainingInProgress = true;
 
-  isChecked: CheckedInput = [2,3,4,5];
-  value: ValueInput = 1;
-
-  constructor() {
-    setTimeout(() => {
-      // this.isChecked = [...(this.isChecked as number[]), 1]
-      this.value = 2
-    }, 3000);
+  keyboardValue = '';
+  options: KeyboardOptions = {
+    'key-R': {
+      text: '.',
+      transform: (val: string) => {
+        if (val.includes('.') || val === '') return val
+        return val + '.'
+      }
+    }
   }
 
-  onCheckedChange(val: boolean) {
-    console.log('on checked changed')
-    // this.isChecked = val;
-  }
-
-  // onCheckedChange(val: boolean) {
-  //   console.log(`checked changed: ${val}`)
+  // constructor() {
+  //   setTimeout(() => {
+  //     this.keyboardValue = '99'
+  //   }, 3000);
   // }
+
+  onKeyTapped(keyName: string) {
+    // console.log(`tapped: ${keyName}`)
+  }
+
+  onValueChange(val: string) {
+    // console.log(`value changed! new value: ${val}`)
+  }
 
 }

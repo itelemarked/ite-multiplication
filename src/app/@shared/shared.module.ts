@@ -12,7 +12,7 @@ import { NumericKeyboardComponent } from "./components/keyboard/numeric-keyboard
 const COMPONENTS = [
   AppToolbarComponent,
   AppToolbarMenuModal,
-  NumericKeyboardComponent,
+  NumericKeyboardComponent
 ];
 
 
